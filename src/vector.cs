@@ -19,7 +19,7 @@ public class Vector
 
     public Vector Translate(Cartesian o)
     {
-        return new Vector(this.p + o, this.f);
+        return new Vector(p + o, f);
     }
 
     public Vector TranslateForce(Cartesian f)

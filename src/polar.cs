@@ -2,7 +2,6 @@ using System;
 
 public class Polar
 {
-    public const double pi = 3.1415926536;
     public double a;
     public double r;
 
@@ -20,8 +19,7 @@ public class Polar
 
     public Polar Negative()
     {
-        double n = a + pi;
-        if (n > 2 * pi) n -= 2 * pi;
+        double n = a < Math.PI ? a + Math.PI : a - Math.PI;
         return new Polar(n, r);
     }
 }

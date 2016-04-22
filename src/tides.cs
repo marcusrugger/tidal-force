@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-public class HelloWorld : Form
+public class Tides : Form
 {
     public const double massEarth = 5.972e24;
     public const double massMoon  = 7.342e22;
@@ -14,10 +14,10 @@ public class HelloWorld : Form
 
     static public void Main ()
     {
-        Application.Run(new HelloWorld());
+        Application.Run(new Tides());
     }
 
-    public HelloWorld ()
+    public Tides ()
     {
         Text = "Tides";
         Size = new System.Drawing.Size(1000, 1000);
@@ -28,13 +28,13 @@ public class HelloWorld : Form
 
     protected override void OnPaint(PaintEventArgs e)
     {
-        DrawIt();
+        DrawIt(fnGforce);
     }
 
 
-    private void DrawIt()
+    private void DrawIt(Function force)
     {
-        Console.WriteLine("Gforce: " + fnGforce(distance));
+        Console.WriteLine("Gforce: " + force(distance));
         System.Drawing.Graphics graphics = this.CreateGraphics();
         System.Drawing.Rectangle rectangle = new System.Drawing.Rectangle(200, 200, 600, 600);
         graphics.DrawEllipse(System.Drawing.Pens.Black, rectangle);
