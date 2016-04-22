@@ -2,13 +2,6 @@ using System;
 
 class TidalVectors
 {
-    public const double TAU = 2 * Math.PI;
-
-    public const double massEarth   = 5.972e24;
-    public const double massMoon    = 7.342e22;
-    public const double distance    = 370310054.0;
-    public const double radiusEarth = 6371;
-
     public delegate double Function(double a);
 
     public const int SLICE_DEGREES = 10;
@@ -28,9 +21,9 @@ class TidalVectors
         return 180.0 * radians / Math.PI;
     }
 
-    TidalVectors()
+    public TidalVectors()
     {
-        gforce = new GravitationalForce(massMoon);
+        gforce = new GravitationalForce(Constants.Moon.MASS);
         fnGforce = new Function(gforce.compute);
 
         PopulatePoints();
@@ -47,26 +40,27 @@ class TidalVectors
     {
         var position = CalculatePosition(angle);
         var force    = CalculateForce(position);
+
+        Console.WriteLine("Force: x = {0,6:0.0}, y = {1,6:0.0}", force.x, force.y);
         return new Vector(position, force);
     }
 
     private Cartesian CalculatePosition(double angle)
     {
-        var pc = new Polar(angle, radiusEarth);
+        var pc = new Polar(angle, Constants.Earth.MEAN_RADIUS);
         return new Cartesian(pc);
     }
 
     private Cartesian CalculateForce(Cartesian cc)
     {
-        var lunarCoord       = new Cartesian(distance, 0.0);
-        var forceEarthCenter = new Cartesian(fnGforce(distance), 0.0);
+        var lunarCoord       = new Cartesian(Constants.Moon.MEAN_DISTANCE, 0.0);
+        var forceEarthCenter = new Cartesian(fnGforce(Constants.Moon.MEAN_DISTANCE), 0.0);
 
         var distanceToMoon  = lunarCoord - cc;
         var distanceInPolar = new Polar(distanceToMoon);
         var polarForce      = new Polar(distanceInPolar.a, fnGforce(distanceInPolar.r));
         var coordForce      = new Cartesian(polarForce);
         var relativeForce   = coordForce - forceEarthCenter;
-
-        return relativeForce.Magnify(10e10);
+        return relativeForce.Magnify(10e6); // Convert to micronewtons
     }
 }

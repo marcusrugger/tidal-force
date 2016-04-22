@@ -1,8 +1,10 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 public class Tides : Form
 {
+    private TidalVectors vectors = new TidalVectors();
 
     static public void Main ()
     {
@@ -17,13 +19,14 @@ public class Tides : Form
 
     protected override void OnPaint(PaintEventArgs e)
     {
-        DrawIt();
+        base.OnPaint(e);
+        DrawIt(e.Graphics);
     }
 
-    private void DrawIt()
+    private void DrawIt(Graphics graphics)
     {
-        System.Drawing.Graphics graphics = this.CreateGraphics();
-        System.Drawing.Rectangle rectangle = new System.Drawing.Rectangle(200, 200, 600, 600);
+        // System.Drawing.Graphics graphics = this.CreateGraphics();
+        Rectangle rectangle = new Rectangle(200, 200, 600, 600);
         graphics.DrawEllipse(System.Drawing.Pens.Black, rectangle);
     }
 }
