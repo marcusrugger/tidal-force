@@ -31,4 +31,14 @@ public class Cartesian
     {
         return new Cartesian(-x, -y);
     }
+
+    public double Distance()
+    {
+        return Math.Sqrt(x*x + y*y);
+    }
+
+    public Cartesian Magnify(double magnitude)
+    {
+        return new Cartesian(magnitude * x, magnitude * y);
+    }
 }
