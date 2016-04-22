@@ -37,7 +37,7 @@ public class Cartesian
         return Math.Sqrt(x*x + y*y);
     }
 
-    public Cartesian Magnify(double magnitude)
+    public Cartesian Multiply(double magnitude)
     {
         return new Cartesian(magnitude * x, magnitude * y);
     }

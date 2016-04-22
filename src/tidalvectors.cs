@@ -1,15 +1,15 @@
 using System;
+using System.Drawing;
 
 class TidalVectors
 {
-    public delegate double Function(double a);
-
-    public const int SLICE_DEGREES = 10;
+    public const int SLICE_DEGREES = 5;
     public const int SLICE_COUNT   = 360 / SLICE_DEGREES;
     public Vector[] points;
 
     private GravitationalForce gforce;
-    private Function fnGforce;
+    private Cartesian positionMoon;
+    private Cartesian forceEarthCenter;
 
     static public double toRadians(double degrees)
     {
@@ -23,9 +23,9 @@ class TidalVectors
 
     public TidalVectors()
     {
-        gforce = new GravitationalForce(Constants.Moon.MASS);
-        fnGforce = new Function(gforce.compute);
-
+        gforce           = new GravitationalForce(Constants.Moon.MASS);
+        positionMoon     = new Cartesian(Constants.Moon.MEAN_DISTANCE, 0.0);
+        forceEarthCenter = new Cartesian(gforce.compute(Constants.Moon.MEAN_DISTANCE), 0.0);
         PopulatePoints();
     }
 
@@ -51,16 +51,27 @@ class TidalVectors
         return new Cartesian(pc);
     }
 
-    private Cartesian CalculateForce(Cartesian cc)
+    private Cartesian CalculateForce(Cartesian positionPoint)
     {
-        var lunarCoord       = new Cartesian(Constants.Moon.MEAN_DISTANCE, 0.0);
-        var forceEarthCenter = new Cartesian(fnGforce(Constants.Moon.MEAN_DISTANCE), 0.0);
+        var forcePolar  = new Polar(positionMoon - positionPoint).TranslateR(gforce.compute);
+        var forceVector = new Cartesian(forcePolar);
 
-        var distanceToMoon  = lunarCoord - cc;
-        var distanceInPolar = new Polar(distanceToMoon);
-        var polarForce      = new Polar(distanceInPolar.a, fnGforce(distanceInPolar.r));
-        var coordForce      = new Cartesian(polarForce);
-        var relativeForce   = coordForce - forceEarthCenter;
-        return relativeForce.Magnify(10e6); // Convert to micronewtons
+        return (forceVector - forceEarthCenter).Multiply(10e6); // Convert to micronewtons
+    }
+
+    public void Draw(Graphics graphics)
+    {
+        const double DISPLAY_RADIUS = 300;
+        foreach (var vector in points)
+        {
+            var v = vector.p.Multiply(DISPLAY_RADIUS / Constants.Earth.MEAN_RADIUS);
+            var p1 = new Point(500 + (int) v.x, 500 + (int) v.y);
+            var p2 = new Point((int) (10.0 * vector.f.x), (int) (10.0 * vector.f.y));
+            p2.X = p1.X + p2.X;
+            p2.Y = p1.Y + p2.Y;
+            graphics.DrawLine(Pens.Red, p1, p2);
+            graphics.FillEllipse(Brushes.Green, p1.X - 2, p1.Y - 2, 5, 5);
+            graphics.FillEllipse(Brushes.Blue , p2.X - 2, p2.Y - 2, 5, 5);
+        }
     }
 }

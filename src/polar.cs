@@ -22,4 +22,9 @@ public class Polar
         double n = a < Math.PI ? a + Math.PI : a - Math.PI;
         return new Polar(n, r);
     }
+
+    public Polar TranslateR(Func<double, double> fn)
+    {
+        return new Polar(a, fn(r));
+    }
 }
