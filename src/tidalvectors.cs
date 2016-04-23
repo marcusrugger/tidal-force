@@ -5,9 +5,6 @@ using System.Linq;
 
 class TidalVectors
 {
-    private static int SLICE_DEGREES = 15;
-    private static int SLICE_COUNT   = 360 / SLICE_DEGREES;
-
     private static GravitationalForce gforce  = new GravitationalForce(Constants.Moon.MASS);
     private static Cartesian positionMoon     = new Cartesian(Constants.Moon.MEAN_DISTANCE, 0.0);
     private static Cartesian forceEarthCenter = new Cartesian(gforce.compute(Constants.Moon.MEAN_DISTANCE), 0.0);
@@ -22,11 +19,11 @@ class TidalVectors
         return 180.0 * radians / Math.PI;
     }
 
-    public static IEnumerable<Tuple<Cartesian, Cartesian>> Create()
+    public static IEnumerable<Tuple<Cartesian, Cartesian>> Create(int angle)
     {
         // Create a uniform set of points along a circle of Earth radius
-        var points = Enumerable.Range(0, SLICE_COUNT)
-                               .Select(n => toRadians( (double) (SLICE_DEGREES * n) ))
+        var points = Enumerable.Range(0, 360 / angle)
+                               .Select(n => toRadians( (double) (angle * n) ))
                                .Select(a => new Polar(a, Constants.Earth.MEAN_RADIUS).ToCartesian());
 
         // Calculate the lunar gravitational force at each point, relative to Earth's center, and convert to micronewtons
@@ -34,6 +31,6 @@ class TidalVectors
                            .Select(f => (f - forceEarthCenter).Multiply(1e6));
 
         // Combine points and forces into Tuple and return them to caller
-        return points.Zip(forces, (p, f) => Tuple.Create(p, f));
+        return Enumerable.Zip(points, forces, (p, f) => Tuple.Create(p, f));
     }
 }

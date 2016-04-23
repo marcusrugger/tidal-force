@@ -22,12 +22,6 @@ public class Polar
         return new Cartesian(this);
     }
 
-    public Polar Negative()
-    {
-        double n = a < Math.PI ? a + Math.PI : a - Math.PI;
-        return new Polar(n, r);
-    }
-
     public Polar TransformR(Func<double, double> fn)
     {
         return new Polar(a, fn(r));

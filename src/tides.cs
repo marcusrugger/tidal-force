@@ -23,16 +23,15 @@ public class Tides : Form
     public Tides ()
     {
         DISPLAY_CENTER = new Point(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2);
-        DISPLAY_EARTH  = new Rectangle(DISPLAY_CENTER.X - DISPLAY_EARTH_RADIUS,
-                                       DISPLAY_CENTER.Y - DISPLAY_EARTH_RADIUS,
+        DISPLAY_EARTH  = new Rectangle(DISPLAY_CENTER.X - DISPLAY_EARTH_RADIUS + 1,
+                                       DISPLAY_CENTER.Y - DISPLAY_EARTH_RADIUS + 1,
                                        2 * DISPLAY_EARTH_RADIUS,
                                        2 * DISPLAY_EARTH_RADIUS);
 
         Text = "Tides";
         Size = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
-        IEnumerable<Tuple<Cartesian, Cartesian>> vectors = TidalVectors.Create();
-        segments = vectors.Select(TransformToDisplayPoints);
+        segments = TidalVectors.Create(15).Select(TransformToDisplayPoints);
     }
 
     private Tuple<Point, Point> TransformToDisplayPoints(Tuple<Cartesian, Cartesian> vector)
