@@ -8,6 +8,13 @@ public class Tides : Form
 {
     private IEnumerable<Tuple<Point, Point>> segments;
 
+    private const int DISPLAY_WIDTH        = 1000;
+    private const int DISPLAY_HEIGHT       = 1000;
+    private const int DISPLAY_EARTH_RADIUS = 300;
+
+    private readonly Point DISPLAY_CENTER;
+    private readonly Rectangle DISPLAY_EARTH;
+
     static public void Main ()
     {
         Application.Run(new Tides());
@@ -15,22 +22,25 @@ public class Tides : Form
 
     public Tides ()
     {
-        Text = "Tides";
-        Size = new System.Drawing.Size(1000, 1000);
+        DISPLAY_CENTER = new Point(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2);
+        DISPLAY_EARTH  = new Rectangle(DISPLAY_CENTER.X - DISPLAY_EARTH_RADIUS,
+                                       DISPLAY_CENTER.Y - DISPLAY_EARTH_RADIUS,
+                                       2 * DISPLAY_EARTH_RADIUS,
+                                       2 * DISPLAY_EARTH_RADIUS);
 
-        IEnumerable<Vector> vectors = TidalVectors.Create();
+        Text = "Tides";
+        Size = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+
+        IEnumerable<Tuple<Cartesian, Cartesian>> vectors = TidalVectors.Create();
         segments = vectors.Select(TransformToDisplayPoints);
     }
 
-    private Tuple<Point, Point> TransformToDisplayPoints(Vector vector)
+    private Tuple<Point, Point> TransformToDisplayPoints(Tuple<Cartesian, Cartesian> vector)
     {
-        const double DISPLAY_RADIUS = 300;
-        var v = vector.p.Multiply(DISPLAY_RADIUS / Constants.Earth.MEAN_RADIUS);
+        var p1 = vector.Item1.Multiply(DISPLAY_EARTH_RADIUS / Constants.Earth.MEAN_RADIUS).ToPoint();
+        var p2 = vector.Item2.Multiply(50.0).ToPoint();
 
-        var p1 = new Point((int) (v.x + 0.5), (int) (v.y + 0.5));
-        p1.Offset(500, 500);
-
-        var p2 = new Point((int) (50.0 * vector.f.x + 0.5), (int) (50.0 * vector.f.y + 0.5));
+        p1.Offset(DISPLAY_CENTER);
         p2.Offset(p1);
 
         return Tuple.Create(p1, p2);
@@ -39,20 +49,19 @@ public class Tides : Form
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
-        DrawIt(e.Graphics);
-    }
-
-    private void DrawIt(Graphics graphics)
-    {
-        DrawEarth(graphics);
-        foreach (var pair in segments)
-            DrawSegment(graphics, pair.Item1, pair.Item2);
+        DrawEarth(e.Graphics);
+        DrawSegments(e.Graphics);
     }
 
     private void DrawEarth(Graphics graphics)
     {
-        Rectangle rectangle = new Rectangle(200, 200, 600, 600);
-        graphics.FillEllipse(System.Drawing.Brushes.Aqua, rectangle);
+        graphics.FillEllipse(Brushes.Aqua, DISPLAY_EARTH);
+    }
+
+    private void DrawSegments(Graphics graphics)
+    {
+        foreach (var pair in segments)
+            DrawSegment(graphics, pair.Item1, pair.Item2);
     }
 
     private void DrawSegment(Graphics graphics, Point p1, Point p2)

@@ -22,22 +22,22 @@ class TidalVectors
         return 180.0 * radians / Math.PI;
     }
 
-    public static IEnumerable<Vector> Create()
+    public static IEnumerable<Tuple<Cartesian, Cartesian>> Create()
     {
         // Create a uniform list of angles from 0 - 360 degrees
-        IEnumerable<double> angles = Enumerable.Range(0, SLICE_COUNT)
-                                               .Select(n => toRadians(SLICE_DEGREES * (double) n));
+        var angles = Enumerable.Range(0, SLICE_COUNT)
+                               .Select(n => toRadians( (double) (SLICE_DEGREES * n) ));
 
         // Tranform angles into points on a circle of Earth radius
-        IEnumerable<Cartesian> points2d = angles.Select(a => new Polar(a, Constants.Earth.MEAN_RADIUS).ToCartesian());
+        var points2d = angles.Select(a => new Polar(a, Constants.Earth.MEAN_RADIUS).ToCartesian());
 
         // Calculate lunar gravitational force at each point
-        IEnumerable<Cartesian> force2d = points2d.Select(p => new Polar(positionMoon - p).TransformR(gforce.compute).ToCartesian());
+        var force2d = points2d.Select(p => new Polar(positionMoon - p).TransformR(gforce.compute).ToCartesian());
 
         // Subtract gravitational force at Earth's center and convert to micronewtons
-        IEnumerable<Cartesian> relative2d = force2d.Select(f => (f - forceEarthCenter).Multiply(1e6));
+        var relative2d = force2d.Select(f => (f - forceEarthCenter).Multiply(1e6));
 
-        // Combine points and forces into vector
-        return points2d.Zip(relative2d, (p, f) => new Vector(p, f));
+        // Combine points and forces into Tuple
+        return points2d.Zip(relative2d, (p, f) => Tuple.Create(p, f));
     }
 }

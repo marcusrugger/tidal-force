@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 
 public class Cartesian
 {
@@ -40,5 +41,10 @@ public class Cartesian
     public Cartesian Multiply(double magnitude)
     {
         return new Cartesian(magnitude * x, magnitude * y);
+    }
+
+    public Point ToPoint()
+    {
+        return new Point((int) (x + 0.5), (int) (y + 0.5));
     }
 }
