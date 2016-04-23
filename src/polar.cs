@@ -17,13 +17,18 @@ public class Polar
         this.r = Math.Sqrt(p.x * p.x + p.y * p.y);
     }
 
+    public Cartesian ToCartesian()
+    {
+        return new Cartesian(this);
+    }
+
     public Polar Negative()
     {
         double n = a < Math.PI ? a + Math.PI : a - Math.PI;
         return new Polar(n, r);
     }
 
-    public Polar TranslateR(Func<double, double> fn)
+    public Polar TransformR(Func<double, double> fn)
     {
         return new Polar(a, fn(r));
     }

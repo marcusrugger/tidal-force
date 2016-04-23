@@ -25,8 +25,13 @@ public class Tides : Form
 
     private void DrawIt(Graphics graphics)
     {
-        Rectangle rectangle = new Rectangle(200, 200, 600, 600);
-        graphics.DrawEllipse(System.Drawing.Pens.Black, rectangle);
+        DrawEarth(graphics);
         vectors.Draw(graphics);
+    }
+
+    private void DrawEarth(Graphics graphics)
+    {
+        Rectangle rectangle = new Rectangle(200, 200, 600, 600);
+        graphics.FillEllipse(System.Drawing.Brushes.Aqua, rectangle);
     }
 }
