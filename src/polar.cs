@@ -13,7 +13,13 @@ public class Polar
 
     public Polar(Cartesian p)
     {
-        this.a = Math.Atan(p.y / p.x);
+        if (Math.Abs(p.x) > 0.000001)
+            this.a = Math.Atan(p.y / p.x);
+        else if (p.y >= 0.0)
+            this.a = Math.PI / 2.0;
+        else
+            this.a = 3.0 * Math.PI / 2.0;
+
         this.r = Math.Sqrt(p.x * p.x + p.y * p.y);
     }
 
