@@ -33,8 +33,8 @@ class PolarTest
         Cartesian cp = new Cartesian(x, y);
         Polar pp = new Polar(cp);
 
-        Assert.That(Math.Abs(pp.a - expected_a), Is.LessThan(0.000001));        
-        Assert.That(Math.Abs(pp.r - expected_r), Is.LessThan(0.000001));
+        Assert.That(Math.Abs(pp.a - expected_a), Is.LessThan(1e-6));        
+        Assert.That(Math.Abs(pp.r - expected_r), Is.LessThan(1e-6));
     }
 
     [Test]

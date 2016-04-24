@@ -19,7 +19,7 @@ public class Polar
 
     private double SafeAtan(Cartesian p)
     {
-        if (Math.Abs(p.x) > 0.000001)
+        if (Math.Abs(p.x) > 1e-9)
             return AtanByQuadrant(p);
         else
             return AtanPointOnYAxis(p);

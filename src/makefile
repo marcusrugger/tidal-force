@@ -6,8 +6,10 @@ SOURCE = 	tides.cs				\
 			polar.cs				\
 			gravitationalforce.cs
 
-NUNIT_PATH			=	/mnt/data/bin/nunit-3.2.1
+NUNIT_VERSION		=	nunit-3.2.1
+NUNIT_PATH			=	/mnt/data/bin/$(NUNIT_VERSION)
 NUNIT_FRAMEWORK		=	$(NUNIT_PATH)/bin/net-4.0/nunit.framework.dll
+NUNIT_CONSOLE		=	$(NUNIT_PATH)/bin/nunit3-console.exe
 
 
 all:		tides.exe	\
@@ -21,7 +23,7 @@ clean:
 
 
 runtests:	tests.dll
-	mono /mnt/data/bin/nunit-3.2.1/bin/nunit3-console.exe tests.dll -noresult
+	mono $(NUNIT_CONSOLE) tests.dll -noresult
 
 
 tides.exe:	$(SOURCE)
@@ -29,5 +31,6 @@ tides.exe:	$(SOURCE)
 
 
 tests.dll:	test.polar.cs			\
+			test.cartesian.cs		\
 			$(SOURCE)
 	mcs -out:$@ -target:library -pkg:dotnet -r:$(NUNIT_FRAMEWORK) $^
