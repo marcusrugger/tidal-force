@@ -20,6 +20,7 @@ all:		tides.exe	\
 clean:
 	-rm tides.exe
 	-rm tests.dll
+	-rm tests.mdb
 
 
 runtests:	tests.dll
@@ -30,7 +31,8 @@ tides.exe:	$(SOURCE)
 	mcs -out:$@ -target:exe -pkg:dotnet $^
 
 
-tests.dll:	test.polar.cs			\
-			test.cartesian.cs		\
+tests.dll:	test.polar.cs				\
+			test.cartesian.cs			\
+			test.gravitationalforce.cs	\
 			$(SOURCE)
 	mcs -out:$@ -target:library -pkg:dotnet -r:$(NUNIT_FRAMEWORK) $^
