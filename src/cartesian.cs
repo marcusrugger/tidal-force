@@ -28,7 +28,12 @@ public class Cartesian
         return new Cartesian(ls.x - rs.x, ls.y - rs.y);
     }
 
-    public Cartesian Multiply(double magnitude)
+    public Cartesian Subtract(Cartesian other)
+    {
+        return new Cartesian(x - other.x, y - other.y);
+    }
+
+    public Cartesian Scale(double magnitude)
     {
         return new Cartesian(magnitude * x, magnitude * y);
     }
@@ -36,5 +41,10 @@ public class Cartesian
     public Point ToPoint()
     {
         return new Point((int) (x + 0.5), (int) (y + 0.5));
+    }
+
+    public Polar ToPolar()
+    {
+        return new Polar(this);
     }
 }

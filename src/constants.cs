@@ -21,4 +21,10 @@ class Constants
         public const double MEAN_DISTANCE   = 370.310054e6;     // m
         public const double SEMI_MAJOR_AXIS = 384.399e6;        // m
     }
+
+    public class Sun
+    {
+        public const double MASS            =   1.989e30;       // kg
+        public const double MEAN_DISTANCE   = 149.597870700e9;  // m
+    }
 }
