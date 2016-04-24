@@ -14,6 +14,10 @@ public class Tides : Form
 
     private readonly Point DISPLAY_CENTER;
 
+    private Timer timer;
+
+    private int angleSun;
+
     static public void Main ()
     {
         Application.Run(new Tides());
@@ -26,7 +30,19 @@ public class Tides : Form
         Text = "Tides";
         Size = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
-        segments = TidalVectors.Create(32).Select(TransformToDisplayPoints);
+        timer = new Timer();
+        timer.Enabled   = true;
+        timer.Interval  = 50;
+        timer.Tick     += new EventHandler(TimerTick);
+
+        angleSun = 0;
+        var positionSun = new Polar(TidalVectors.toRadians((double) angleSun), Constants.Sun.MEAN_DISTANCE).ToCartesian();
+        segments = TidalVectors.Create(positionSun, 32).Select(TransformToDisplayPoints);
+    }
+
+    public void Dispose()
+    {
+        timer.Dispose();
     }
 
     private Tuple<Point, Point> TransformToDisplayPoints(Tuple<Cartesian, Cartesian> vector)
@@ -67,5 +83,13 @@ public class Tides : Form
         graphics.DrawLine(Pens.Red, p1, p2);
         graphics.FillEllipse(Brushes.Green, p1.X - 2, p1.Y - 2, 5, 5);
         graphics.FillEllipse(Brushes.Blue , p2.X - 2, p2.Y - 2, 5, 5);
+    }
+
+    private void TimerTick(object sender, System.EventArgs e)
+    {
+        angleSun = (angleSun + 2) % 360;
+        var positionSun = new Polar(TidalVectors.toRadians((double) angleSun), Constants.Sun.MEAN_DISTANCE).ToCartesian();
+        segments = TidalVectors.Create(positionSun, 32).Select(TransformToDisplayPoints);
+        Invalidate();
     }
 }
