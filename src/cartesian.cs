@@ -38,6 +38,11 @@ public class Cartesian
         return new Cartesian(magnitude * x, magnitude * y);
     }
 
+    public Cartesian Transform(Func<double, double> fn)
+    {
+        return new Cartesian(fn(x), fn(y));
+    }
+
     public Point ToPoint()
     {
         return new Point((int) (x + 0.5), (int) (y + 0.5));

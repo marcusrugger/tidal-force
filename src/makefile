@@ -28,6 +28,10 @@ runtests:	tests.dll
 	mono $(NUNIT_CONSOLE) tests.dll -noresult
 
 
+run:		tides.exe
+	mono tides.exe
+
+
 tides.exe:	$(SOURCE)
 	mcs -out:$@ -target:exe -pkg:dotnet $^
 

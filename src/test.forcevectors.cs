@@ -42,7 +42,7 @@ class ForceVectorsTest
         ForceVectors fv = new ForceVectors(n => 3*n, source, relative, 2.0);
         IEnumerable<Cartesian> vectors = fv.compute(points);
 
-        Assert.That(vectors.Count(), Is.EqualTo(points.Length));
+        Assert.That(vectors.Count(), Is.EqualTo(expected.Length));
 
         var zip = Enumerable.Zip(vectors, expected, (v, e) => Tuple.Create(v, e));
         foreach (var z in zip) ComparePoint(z.Item1, z.Item2);

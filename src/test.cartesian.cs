@@ -51,6 +51,16 @@ class CartesianTest
     }
 
     [Test]
+    public void Transform()
+    {
+        Cartesian p1 = new Cartesian(123.4, 234.5);
+        Cartesian p2 = p1.Transform(n => 2*n);
+
+        Assert.That(Math.Abs(p2.x - 246.8), Is.LessThan(1e-9));
+        Assert.That(Math.Abs(p2.y - 469.0), Is.LessThan(1e-9));
+    }
+
+    [Test]
     public void ToPoint()
     {
         Cartesian cp = new Cartesian(123.4, 234.5);
