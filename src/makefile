@@ -1,6 +1,7 @@
 
 SOURCE = 	tides.cs				\
 			tidalvectors.cs			\
+			forcepoints.cs			\
 			forcevectors.cs			\
 			constants.cs			\
 			cartesian.cs			\
@@ -39,6 +40,7 @@ tides.exe:	$(SOURCE)
 tests.dll:	test.polar.cs				\
 			test.cartesian.cs			\
 			test.gravitationalforce.cs	\
+			test.forcepoints.cs			\
 			test.forcevectors.cs		\
 			$(SOURCE)
 	mcs -out:$@ -target:library -pkg:dotnet -r:$(NUNIT_FRAMEWORK) $^

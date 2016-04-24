@@ -26,7 +26,7 @@ public class Tides : Form
         Text = "Tides";
         Size = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
-        segments = TidalVectors.Create(15).Select(TransformToDisplayPoints);
+        segments = TidalVectors.Create(32).Select(TransformToDisplayPoints);
     }
 
     private Tuple<Point, Point> TransformToDisplayPoints(Tuple<Cartesian, Cartesian> vector)

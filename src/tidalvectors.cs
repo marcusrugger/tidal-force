@@ -5,9 +5,15 @@ using System.Linq;
 
 class TidalVectors
 {
-    private static GravitationalForce gforce  = new GravitationalForce(Constants.Moon.MASS);
+    private static GravitationalForce lunarG  = new GravitationalForce(Constants.Moon.MASS);
+    private static GravitationalForce solarG  = new GravitationalForce(Constants.Sun.MASS);
+    private static Cartesian positionSun      = new Cartesian(0.0, Constants.Sun.MEAN_DISTANCE);
     private static Cartesian positionMoon     = new Cartesian(Constants.Moon.MEAN_DISTANCE, 0.0);
-    private static Cartesian forceEarthCenter = new Cartesian(gforce.compute(Constants.Moon.MEAN_DISTANCE), 0.0);
+    private static Cartesian positionEarth    = new Cartesian(0.0, 0.0);
+    // private static ForceVectors solarVectors  = new ForceVectors(solarG.compute, positionSun , positionEarth, 1e6);
+    private static ForceVectors lunarVectors  = new ForceVectors(lunarG.compute, positionMoon, positionEarth, 1e6);
+
+    private static Func<Cartesian, ForceVectors> fnSolarVectors = p => new ForceVectors(solarG.compute, p, positionEarth, 1e6);
 
     private static double toRadians(double degrees)
     {
@@ -19,27 +25,12 @@ class TidalVectors
         return 180.0 * radians / Math.PI;
     }
 
-    public static IEnumerable<Tuple<Cartesian, Cartesian>> Create(int angle)
+    public static IEnumerable<Tuple<Cartesian, Cartesian>> Create(int sections)
     {
-        var points = Enumerable.Range(0, 360 / angle).Select(n => CalculatePoint(n * angle));
-        var forces = points.Select(CalculateForce);
-        return Enumerable.Zip(points, forces, (p, f) => Tuple.Create(p, f));
-    }
-
-    // For a given angle in degrees, calculate a point on a circle of Earth's radius
-    private static Cartesian CalculatePoint(int angle)
-    {
-        return new Polar(toRadians((double) angle), Constants.Earth.MEAN_RADIUS).ToCartesian();
-    }
-
-    // For a given point, calculate the lunar gravitational force in micronewtons relative to Earth's center
-    private static Cartesian CalculateForce(Cartesian p)
-    {
-        return positionMoon.Subtract(p)                 // Distance from point to the Moon
-                           .ToPolar()                   // Convert to polar coordinates
-                           .TransformR(gforce.compute)  // Calculate lunar gravitational force at point
-                           .ToCartesian()               // Convert back to cartesian coordinates
-                           .Subtract(forceEarthCenter)  // Make force relative to the center of Earth
-                           .Scale(1e6);                 // Convert to micronewtons
+        var points      = new ForcePoints().compute(sections);
+        var lunarForces = lunarVectors.compute(points);
+        var solarForces = fnSolarVectors(positionSun).compute(points);//solarVectors.compute(points);
+        var totalForces = Enumerable.Zip(lunarForces, solarForces, (l, s) => l + s);
+        return Enumerable.Zip(points, totalForces, (p, f) => Tuple.Create(p, f));
     }
 }
