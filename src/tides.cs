@@ -36,7 +36,7 @@ public class Tides : Form
         timer.Tick     += new EventHandler(TimerTick);
 
         angleSun = 0;
-        var positionSun = new Polar(TidalVectors.toRadians((double) angleSun), Constants.Sun.MEAN_DISTANCE).ToCartesian();
+        var positionSun = new Polar(Algorithms.ToRadians((double) angleSun), Constants.Sun.MEAN_DISTANCE).ToCartesian();
         segments = TidalVectors.Create(positionSun, 32).Select(TransformToDisplayPoints);
     }
 
@@ -87,8 +87,8 @@ public class Tides : Form
 
     private void TimerTick(object sender, System.EventArgs e)
     {
-        angleSun = (angleSun + 2) % 360;
-        var positionSun = new Polar(TidalVectors.toRadians((double) angleSun), Constants.Sun.MEAN_DISTANCE).ToCartesian();
+        angleSun = (angleSun + 15) % 360;
+        var positionSun = new Polar(Algorithms.ToRadians((double) angleSun), Constants.Sun.MEAN_DISTANCE).ToCartesian();
         segments = TidalVectors.Create(positionSun, 32).Select(TransformToDisplayPoints);
         Invalidate();
     }

@@ -15,16 +15,6 @@ class TidalVectors
 
     private static Func<Cartesian, ForceVectors> fnSolarVectors = p => new ForceVectors(solarG.compute, p, positionEarth, 1e6);
 
-    public static double toRadians(double degrees)
-    {
-        return Math.PI * degrees / 180.0;
-    }
-
-    private static double toDegrees(double radians)
-    {
-        return 180.0 * radians / Math.PI;
-    }
-
     public static IEnumerable<Tuple<Cartesian, Cartesian>> Create(Cartesian positionSun, int sections)
     {
         var points      = new ForcePoints().compute(sections);

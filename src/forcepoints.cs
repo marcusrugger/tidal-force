@@ -6,11 +6,6 @@ class ForcePoints
 {
     private readonly double radius;
 
-    private static double toRadians(double degrees)
-    {
-        return Math.PI * degrees / 180.0;
-    }
-
     public ForcePoints(double radius = Constants.Earth.MEAN_RADIUS)
     {
         this.radius = radius;
@@ -18,7 +13,7 @@ class ForcePoints
 
     public IEnumerable<Cartesian> compute(int count)
     {
-        Func<int, double> fn = n => toRadians(((double) n) * 360.0 / ((double) count));
+        Func<int, double> fn = n => Algorithms.ToRadians(((double) n) * 360.0 / ((double) count));
         return Enumerable.Range(0, count).Select(n => CalculatePoint( fn(n) ));
     }
 
