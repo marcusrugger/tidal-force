@@ -13,8 +13,8 @@ class PolarTest
 
         Polar p = new Polar(a, r);
 
-        Assert.AreEqual(a, p.a);
-        Assert.AreEqual(r, p.r);
+        Assert.That(p.a, Is.EqualTo(a));
+        Assert.That(p.r, Is.EqualTo(r));
     }
 
     [Test]
@@ -35,5 +35,28 @@ class PolarTest
 
         Assert.That(Math.Abs(pp.a - expected_a), Is.LessThan(0.000001));        
         Assert.That(Math.Abs(pp.r - expected_r), Is.LessThan(0.000001));
+    }
+
+    [Test]
+    public void ToCartesian()
+    {
+        Polar p = new Polar(0.0, 1.0);
+        var   c = p.ToCartesian();
+
+        Assert.That(c, Is.InstanceOf(typeof(Cartesian)));
+        Assert.That(c.x, Is.EqualTo(1.0));
+        Assert.That(c.y, Is.EqualTo(0.0));
+
+        Assert.That(p.a, Is.EqualTo(0.0));
+        Assert.That(p.r, Is.EqualTo(1.0));
+    }
+
+    [Test]
+    public void TransformR()
+    {
+        Polar p = new Polar(Math.PI/4.0, 1.0);
+        Polar n = p.TransformR(r => 2*r);
+        Assert.That(n.r, Is.EqualTo(2.0));
+        Assert.That(p.r, Is.EqualTo(1.0));
     }
 }
