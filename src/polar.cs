@@ -13,14 +13,36 @@ public class Polar
 
     public Polar(Cartesian p)
     {
-        if (Math.Abs(p.x) > 0.000001)
-            this.a = Math.Atan(p.y / p.x);
-        else if (p.y >= 0.0)
-            this.a = Math.PI / 2.0;
-        else
-            this.a = 3.0 * Math.PI / 2.0;
-
+        this.a = SafeAtan(p);
         this.r = Math.Sqrt(p.x * p.x + p.y * p.y);
+    }
+
+    private double SafeAtan(Cartesian p)
+    {
+        if (Math.Abs(p.x) > 0.000001)
+            return AtanByQuadrant(p);
+        else
+            return AtanPointOnYAxis(p);
+    }
+
+    private double AtanByQuadrant(Cartesian p)
+    {
+        double result = Math.Atan(p.y / p.x);
+
+        if (p.x < 0.0)
+            result += Math.PI;
+        else if (p.y < 0.0)
+            result += 2*Math.PI;
+
+        return result;
+    }
+
+    private double AtanPointOnYAxis(Cartesian p)
+    {
+        if (p.y >= 0.0)
+            return Math.PI / 2.0;
+        else
+            return 3.0 * Math.PI / 2.0;
     }
 
     public Cartesian ToCartesian()
