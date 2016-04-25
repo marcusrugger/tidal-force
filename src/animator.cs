@@ -7,6 +7,7 @@ interface IAnimator
 {
     void nextFrame();
     IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame();
+    void Draw(Presenter presenter);
 }
 
 
@@ -21,6 +22,8 @@ abstract class Animator : IAnimator
 
     public abstract void nextFrame();
     public abstract IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame();
+    public virtual void Draw(Presenter presenter)
+    {}
 
 }
 
@@ -93,5 +96,24 @@ class SunMoonAnimator : Animator
         double lunarRadians = Algorithms.ToRadians(lunarAngle);
         double solarRadians = Algorithms.ToRadians(solarAngle);
         return vectorGenerator.compute(lunarRadians, solarRadians);
+    }
+
+    public override void Draw(Presenter presenter)
+    {
+        DrawVectors(presenter);
+        DrawPointer(presenter, Algorithms.ToRadians(lunarAngle));
+        DrawPointer(presenter, Algorithms.ToRadians(solarAngle));
+    }
+
+    private void DrawVectors(Presenter presenter)
+    {
+        presenter.Draw(computeFrame());
+    }
+
+    private void DrawPointer(Presenter presenter, double angle)
+    {
+        var p = new Cartesian(0.0, 0.0);
+        var v = new Polar(angle, 100.0).ToCartesian();
+        presenter.DrawSegment(p, v);
     }
 }

@@ -28,6 +28,11 @@ public class Cartesian
         return new Cartesian(ls.x - rs.x, ls.y - rs.y);
     }
 
+    public Cartesian Add(Cartesian other)
+    {
+        return new Cartesian(x + other.x, y + other.y);
+    }
+
     public Cartesian Subtract(Cartesian other)
     {
         return new Cartesian(x - other.x, y - other.y);

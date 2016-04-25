@@ -64,8 +64,8 @@ class AlgorithmsTest
         IsApproximatelyEqual( Algorithms.ToDegrees(-2.0 * Math.PI / 1.0), -360.0 );
     }
 
-    public bool IsApproximatelyEqual(double a, double b, double fudge = 0.000001)
+    public void IsApproximatelyEqual(double a, double b, double fudge = 0.000001)
     {
-        return Math.Abs(a - b) < fudge;
+        Assert.That(Math.Abs(a - b), Is.LessThan(fudge));
     }
 }
