@@ -55,3 +55,33 @@ class SunAnimator : Animator
         return Enumerable.Zip(points, totalForces, (p, f) => Tuple.Create(p, f));
     }
 }
+
+class MoonAnimator : Animator
+{
+    private static Cartesian positionEarth = new Cartesian(0.0, 0.0);
+    private static Cartesian positionSun = new Cartesian(Constants.Sun.MEAN_DISTANCE, 0.0);
+    private static Func<Cartesian, ForceVectors> fnMoonVectors = p => new ForceVectors(lunarG.compute, p, positionEarth, 1e6);
+    private static ForceVectors solarVectors = new ForceVectors(solarG.compute, positionSun, positionEarth, 1e6);
+
+    private int moonAngle;
+
+    public MoonAnimator(int vectorCount) : base(vectorCount)
+    {
+    }
+
+    public override void nextFrame()
+    {
+        Func<int, int, int> nextAngle = (angle, step) => (angle + step) % 360;
+        moonAngle  = nextAngle(moonAngle, 5);
+    }
+
+    public override IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
+    {
+        var positionMoon = new Polar(Algorithms.ToRadians(moonAngle), Constants.Moon.MEAN_DISTANCE).ToCartesian();
+        var points       = pointGenerator.compute();
+        var solarForces  = solarVectors.compute(points);
+        var moonForces   = fnMoonVectors(positionMoon).compute(points);
+        var totalForces  = Enumerable.Zip(solarForces, moonForces, (l, s) => l + s);
+        return Enumerable.Zip(points, totalForces, (p, f) => Tuple.Create(p, f));
+    }
+}
