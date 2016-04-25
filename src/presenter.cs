@@ -7,7 +7,6 @@ using System.Linq;
 interface IPresenter
 {
     void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors);
-    void DrawSegment(Cartesian realP1, Cartesian realP2);
     void DrawSun(double angle);
     void DrawMoon(double angle);
 }
@@ -51,28 +50,21 @@ class Presenter : IPresenter
             DrawSegment(pair.Item1, pair.Item2);
     }
 
-    public void DrawSegment(Cartesian realP1, Cartesian realP2)
-    {
-        var pt1 = TransformToDisplayPoint(realP1);
-        var pt2 = TransformToDisplayPoint(realP2);
-        DrawSegment(pt1, pt2);
-    }
-
     public void DrawSun(double angle)
     {
-        var realPt = new Polar(angle, 450).ToCartesian();
-        DrawPlanet(Brushes.Yellow, TransformToDisplayPoint(realPt));
+        DrawPlanet(Brushes.Orange, angle);
     }
 
     public void DrawMoon(double angle)
     {
-        var realPt = new Polar(angle, 450).ToCartesian();
-        DrawPlanet(Brushes.Gray, TransformToDisplayPoint(realPt));
+        DrawPlanet(Brushes.Gray, angle);
     }
 
-    private void DrawPlanet(Brush brush, Point p)
+    private void DrawPlanet(Brush brush, double angle)
     {
-        graphics.FillEllipse(brush, p.X - 10, p.Y - 10, 21, 21);
+        var realPt = new Polar(angle, 450).ToCartesian();
+        var pt     = TransformToDisplayPoint(realPt);
+        graphics.FillEllipse(brush, pt.X - 10, pt.Y - 10, 21, 21);
     }
 
     private void DrawSegment(Point p1, Point p2)

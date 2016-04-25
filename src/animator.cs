@@ -61,7 +61,8 @@ class SunAnimator : Animator
 
     public override void nextFrame()
     {
-        solarAngle = (solarAngle + 5) % 360;
+        solarAngle = solarAngle - 5;
+        solarAngle = solarAngle < 0 ? solarAngle + 360 : solarAngle;
     }
 
     public override void Draw(IPresenter presenter)
