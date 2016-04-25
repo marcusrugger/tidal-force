@@ -9,6 +9,7 @@ interface IAnimator
     IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame();
 }
 
+
 abstract class Animator : IAnimator
 {
     protected TidalVectors vectorGenerator;
@@ -21,6 +22,46 @@ abstract class Animator : IAnimator
     public abstract void nextFrame();
     public abstract IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame();
 
+}
+
+
+class MoonAnimator : Animator
+{
+    private int lunarAngle = 0;
+
+    public MoonAnimator(int vectorCount) : base(vectorCount)
+    {}
+
+    public override void nextFrame()
+    {
+        lunarAngle = (lunarAngle + 15) % 360;
+    }
+
+    public override IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
+    {
+        double lunarRadians = Algorithms.ToRadians(lunarAngle);
+        return vectorGenerator.compute(lunarRadians, 0.0);
+    }
+}
+
+
+class SunAnimator : Animator
+{
+    private int solarAngle = 0;
+
+    public SunAnimator(int vectorCount) : base(vectorCount)
+    {}
+
+    public override void nextFrame()
+    {
+        solarAngle = (solarAngle + 15) % 360;
+    }
+
+    public override IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
+    {
+        double solarRadians = Algorithms.ToRadians(solarAngle);
+        return vectorGenerator.compute(0.0, solarRadians);
+    }
 }
 
 
@@ -52,37 +93,5 @@ class SunMoonAnimator : Animator
         double lunarRadians = Algorithms.ToRadians(lunarAngle);
         double solarRadians = Algorithms.ToRadians(solarAngle);
         return vectorGenerator.compute(lunarRadians, solarRadians);
-    }
-}
-
-
-class TidalVectors
-{
-    protected static Cartesian positionEarth    = new Cartesian(0.0, 0.0);
-    protected static GravitationalForce solarG  = new GravitationalForce(Constants.Sun.MASS);
-    protected static GravitationalForce lunarG  = new GravitationalForce(Constants.Moon.MASS);
-
-    private Func<Cartesian, ForceVectors> vectorsLunar = p => new ForceVectors(lunarG.compute, p, positionEarth, 1e6);
-    private Func<Cartesian, ForceVectors> vectorsSolar = p => new ForceVectors(solarG.compute, p, positionEarth, 1e6);
-
-    protected ForcePoints pointGenerator;
-
-    public TidalVectors(int vectorCount)
-    {
-        this.pointGenerator = new ForcePoints(vectorCount);
-    }
-
-    public IEnumerable<Tuple<Cartesian, Cartesian>> compute(double lunarAngle, double solarAngle)
-    {
-        var points = pointGenerator.compute();
-
-        var lunarPosition = new Polar(lunarAngle, Constants.Moon.MEAN_DISTANCE).ToCartesian();
-        var lunarForces   = vectorsLunar(lunarPosition).compute(points);
-
-        var solarPosition = new Polar(solarAngle, Constants.Sun.MEAN_DISTANCE).ToCartesian();
-        var solarForces   = vectorsSolar(solarPosition).compute(points);
-
-        var totalForces = Enumerable.Zip(lunarForces, solarForces, (l, s) => l + s);
-        return Enumerable.Zip(points, totalForces, (p, f) => Tuple.Create(p, f));
     }
 }
