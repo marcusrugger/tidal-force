@@ -33,7 +33,7 @@ public class Tides : Form
         timer.Interval  = 50;
         timer.Tick     += new EventHandler(TimerTick);
 
-        animator = new MoonAnimator(32);
+        animator = new SunMoonAnimator(32);
     }
 
     public void Dispose()
@@ -48,6 +48,9 @@ public class Tides : Form
 
         p1.Offset(DISPLAY_CENTER);
         p2.Offset(p1);
+
+        p1.Y = DISPLAY_HEIGHT - p1.Y;
+        p2.Y = DISPLAY_HEIGHT - p2.Y;
 
         return Tuple.Create(p1, p2);
     }
