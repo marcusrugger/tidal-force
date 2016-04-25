@@ -15,13 +15,8 @@ class ForcePoints
 
     public IEnumerable<Cartesian> compute()
     {
-        Func<int, double> fn = n => Algorithms.ToRadians( (double) n * 360.0 / (double) count );
-        return Enumerable.Range(0, count).Select(n => CalculatePoint( fn(n) ));
-    }
-
-    // For a given angle in radians, calculate a point on a circle
-    private Cartesian CalculatePoint(double angle)
-    {
-        return new Polar(angle, radius).ToCartesian();
+        Func<int, double>       fnRadian = n => Algorithms.ToRadians( (double) n * 360.0 / (double) count );
+        Func<double, Cartesian> fnPoint  = n => new Polar(n, radius).ToCartesian();
+        return Enumerable.Range(0, count).Select(n => fnPoint( fnRadian(n) ));
     }
 }

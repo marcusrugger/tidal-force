@@ -90,7 +90,7 @@ class SunMoonAnimator : Animator
 
     public override void nextFrame()
     {
-        const double stepEarth = 5.0;
+        const double stepEarth = 1.0;
         lunarAngle = nextAngle(lunarAngle, (stepEarth /  28.0) - stepEarth);
         solarAngle = nextAngle(solarAngle, (stepEarth / 365.0) - stepEarth);
     }
@@ -105,15 +105,11 @@ class SunMoonAnimator : Animator
 
     public override void Draw(IPresenter presenter)
     {
-        presenter.Draw    (computeFrame());
-        presenter.DrawSun (Algorithms.ToRadians(solarAngle));
-        presenter.DrawMoon(Algorithms.ToRadians(lunarAngle));
-    }
-
-    private IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
-    {
         double lunarRadians = Algorithms.ToRadians(lunarAngle);
         double solarRadians = Algorithms.ToRadians(solarAngle);
-        return vectorGenerator.compute(lunarRadians, solarRadians);
+
+        presenter.Draw    (vectorGenerator.compute(lunarRadians, solarRadians));
+        presenter.DrawSun (solarRadians);
+        presenter.DrawMoon(lunarRadians);
     }
 }

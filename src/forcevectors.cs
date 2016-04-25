@@ -4,10 +4,6 @@ using System.Linq;
 
 class ForceVectors
 {
-    // private static GravitationalForce gforce  = new GravitationalForce(Constants.Moon.MASS);
-    // private static Cartesian positionMoon     = new Cartesian(Constants.Moon.MEAN_DISTANCE, 0.0);
-    // private static Cartesian forceEarthCenter = new Cartesian(gforce.compute(Constants.Moon.MEAN_DISTANCE), 0.0);
-
     private readonly Func<double, double> fn;
     private readonly Cartesian centerOfGravity;
     private readonly Cartesian relativeForce;

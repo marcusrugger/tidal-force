@@ -23,13 +23,14 @@ public class Tides : Form
     {
         Text = "Tides";
         Size = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        DoubleBuffered = true;
 
         timer = new Timer();
         timer.Enabled   = true;
-        timer.Interval  = 50;
-        timer.Tick     += AdvanceAnimation;
+        timer.Interval  = 33;
+        timer.Tick     += AdvanceAnimationOnTimer;
 
-        this.MouseClick += ToggleAnimator;
+        this.MouseClick += ToggleAnimatorOnMouseClick;
 
         animation_selector = 0;
         animator = new MoonAnimator(32);
@@ -48,13 +49,13 @@ public class Tides : Form
         animator.Draw(presenter);
     }
 
-    private void AdvanceAnimation(object sender, System.EventArgs e)
+    private void AdvanceAnimationOnTimer(object sender, System.EventArgs e)
     {
         animator.nextFrame();
         Invalidate();
     }
 
-    private void ToggleAnimator(object sender, MouseEventArgs e)
+    private void ToggleAnimatorOnMouseClick(object sender, MouseEventArgs e)
     {
         animation_selector = ++animation_selector % 3;
         switch (animation_selector)
