@@ -10,8 +10,8 @@ class ForcePointsTest
     [Test]
     public void Simple()
     {
-        ForcePoints generator = new ForcePoints(1.0);
-        var pts = generator.compute(4);
+        ForcePoints generator = new ForcePoints(4, 1.0);
+        var pts = generator.compute();
 
         Cartesian[] expected = new Cartesian[]
         {

@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 public class Tides : Form
 {
-    private IEnumerable<Tuple<Point, Point>> segments;
+    private IAnimator animator;
 
     private const int DISPLAY_WIDTH        = 1000;
     private const int DISPLAY_HEIGHT       = 1000;
@@ -15,8 +15,6 @@ public class Tides : Form
     private readonly Point DISPLAY_CENTER;
 
     private Timer timer;
-
-    private int angleSun;
 
     static public void Main ()
     {
@@ -35,9 +33,7 @@ public class Tides : Form
         timer.Interval  = 50;
         timer.Tick     += new EventHandler(TimerTick);
 
-        angleSun = 0;
-        var positionSun = new Polar(Algorithms.ToRadians((double) angleSun), Constants.Sun.MEAN_DISTANCE).ToCartesian();
-        segments = TidalVectors.Create(positionSun, 32).Select(TransformToDisplayPoints);
+        animator = new SunAnimator(32);
     }
 
     public void Dispose()
@@ -74,6 +70,8 @@ public class Tides : Form
 
     private void DrawSegments(Graphics graphics)
     {
+        var segments = animator.computeFrame().Select(TransformToDisplayPoints);
+
         foreach (var pair in segments)
             DrawSegment(graphics, pair.Item1, pair.Item2);
     }
@@ -87,9 +85,7 @@ public class Tides : Form
 
     private void TimerTick(object sender, System.EventArgs e)
     {
-        angleSun = (angleSun + 15) % 360;
-        var positionSun = new Polar(Algorithms.ToRadians((double) angleSun), Constants.Sun.MEAN_DISTANCE).ToCartesian();
-        segments = TidalVectors.Create(positionSun, 32).Select(TransformToDisplayPoints);
+        animator.nextFrame();
         Invalidate();
     }
 }

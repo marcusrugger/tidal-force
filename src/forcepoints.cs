@@ -5,15 +5,17 @@ using System.Linq;
 class ForcePoints
 {
     private readonly double radius;
+    private readonly int count;
 
-    public ForcePoints(double radius = Constants.Earth.MEAN_RADIUS)
+    public ForcePoints(int count, double radius = Constants.Earth.MEAN_RADIUS)
     {
+        this.count  = count;
         this.radius = radius;
     }
 
-    public IEnumerable<Cartesian> compute(int count)
+    public IEnumerable<Cartesian> compute()
     {
-        Func<int, double> fn = n => Algorithms.ToRadians(((double) n) * 360.0 / ((double) count));
+        Func<int, double> fn = n => Algorithms.ToRadians( (double) n * 360.0 / (double) count );
         return Enumerable.Range(0, count).Select(n => CalculatePoint( fn(n) ));
     }
 

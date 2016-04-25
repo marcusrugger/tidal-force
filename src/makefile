@@ -1,7 +1,7 @@
 
 SOURCE = 	tides.cs				\
 			algorithms.cs			\
-			tidalvectors.cs			\
+			animator.cs				\
 			forcepoints.cs			\
 			forcevectors.cs			\
 			constants.cs			\
