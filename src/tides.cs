@@ -28,7 +28,7 @@ public class Tides : Form
         timer.Interval  = 50;
         timer.Tick     += new EventHandler(TimerTick);
 
-        animator = new SunMoonAnimator(32);
+        animator = new MoonAnimator(32);
     }
 
     public void Dispose()

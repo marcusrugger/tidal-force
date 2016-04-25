@@ -4,7 +4,16 @@ using System.Drawing;
 using System.Linq;
 
 
-class Presenter
+interface IPresenter
+{
+    void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors);
+    void DrawSegment(Cartesian realP1, Cartesian realP2);
+    void DrawSun(double angle);
+    void DrawMoon(double angle);
+}
+
+
+class Presenter : IPresenter
 {
     private const int DISPLAY_EARTH_RADIUS = 300;
 
@@ -47,6 +56,23 @@ class Presenter
         var pt1 = TransformToDisplayPoint(realP1);
         var pt2 = TransformToDisplayPoint(realP2);
         DrawSegment(pt1, pt2);
+    }
+
+    public void DrawSun(double angle)
+    {
+        var realPt = new Polar(angle, 450).ToCartesian();
+        DrawPlanet(Brushes.Yellow, TransformToDisplayPoint(realPt));
+    }
+
+    public void DrawMoon(double angle)
+    {
+        var realPt = new Polar(angle, 450).ToCartesian();
+        DrawPlanet(Brushes.Gray, TransformToDisplayPoint(realPt));
+    }
+
+    private void DrawPlanet(Brush brush, Point p)
+    {
+        graphics.FillEllipse(brush, p.X - 10, p.Y - 10, 21, 21);
     }
 
     private void DrawSegment(Point p1, Point p2)

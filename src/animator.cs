@@ -6,8 +6,7 @@ using System.Linq;
 interface IAnimator
 {
     void nextFrame();
-    IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame();
-    void Draw(Presenter presenter);
+    void Draw(IPresenter presenter);
 }
 
 
@@ -21,9 +20,7 @@ abstract class Animator : IAnimator
     }
 
     public abstract void nextFrame();
-    public abstract IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame();
-    public virtual void Draw(Presenter presenter)
-    {}
+    public abstract void Draw(IPresenter presenter);
 
 }
 
@@ -37,10 +34,17 @@ class MoonAnimator : Animator
 
     public override void nextFrame()
     {
-        lunarAngle = (lunarAngle + 15) % 360;
+        lunarAngle = (lunarAngle + 5) % 360;
     }
 
-    public override IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
+    public override void Draw(IPresenter presenter)
+    {
+        presenter.Draw    (computeFrame());
+        presenter.DrawSun (0.0);
+        presenter.DrawMoon(Algorithms.ToRadians(lunarAngle));
+    }
+
+    private IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
     {
         double lunarRadians = Algorithms.ToRadians(lunarAngle);
         return vectorGenerator.compute(lunarRadians, 0.0);
@@ -57,10 +61,17 @@ class SunAnimator : Animator
 
     public override void nextFrame()
     {
-        solarAngle = (solarAngle + 15) % 360;
+        solarAngle = (solarAngle + 5) % 360;
     }
 
-    public override IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
+    public override void Draw(IPresenter presenter)
+    {
+        presenter.Draw    (computeFrame());
+        presenter.DrawSun (Algorithms.ToRadians(solarAngle));
+        presenter.DrawMoon(0.0);
+    }
+
+    private IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
     {
         double solarRadians = Algorithms.ToRadians(solarAngle);
         return vectorGenerator.compute(0.0, solarRadians);
@@ -91,29 +102,17 @@ class SunMoonAnimator : Animator
         return angle;
     }
 
-    public override IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
+    public override void Draw(IPresenter presenter)
+    {
+        presenter.Draw    (computeFrame());
+        presenter.DrawSun (Algorithms.ToRadians(solarAngle));
+        presenter.DrawMoon(Algorithms.ToRadians(lunarAngle));
+    }
+
+    private IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
     {
         double lunarRadians = Algorithms.ToRadians(lunarAngle);
         double solarRadians = Algorithms.ToRadians(solarAngle);
         return vectorGenerator.compute(lunarRadians, solarRadians);
-    }
-
-    public override void Draw(Presenter presenter)
-    {
-        DrawVectors(presenter);
-        DrawPointer(presenter, Algorithms.ToRadians(lunarAngle));
-        DrawPointer(presenter, Algorithms.ToRadians(solarAngle));
-    }
-
-    private void DrawVectors(Presenter presenter)
-    {
-        presenter.Draw(computeFrame());
-    }
-
-    private void DrawPointer(Presenter presenter, double angle)
-    {
-        var p = new Cartesian(0.0, 0.0);
-        var v = new Polar(angle, 100.0).ToCartesian();
-        presenter.DrawSegment(p, v);
     }
 }
