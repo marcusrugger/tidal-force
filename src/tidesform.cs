@@ -108,14 +108,17 @@ public class TidesForm : Form
         {
             case ToolbarButtons.MOON_ANIMATION:
                 animator = new MoonAnimator(32);
+                isPaused = false;
                 break;
 
             case ToolbarButtons.SUN_ANIMATION:
                 animator = new SunAnimator(32);
+                isPaused = false;
                 break;
 
             case ToolbarButtons.SUN_MOON_ANIMATION:
                 animator = new SunMoonAnimator(32);
+                isPaused = false;
                 break;
 
             case ToolbarButtons.PAUSE:
