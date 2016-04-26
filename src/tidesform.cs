@@ -32,20 +32,28 @@ public class TidesForm : Form
     {
         isPaused = true;
 
-        Text = "Tides";
-        Size = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-        DoubleBuffered = true;
+        SetupForm();
+        CreateTimer();
+        CreateToolbar();
 
+        this.MouseClick += ToggleAnimatorOnMouseClick;
+
+        animator = new MoonAnimator(32);
+    }
+
+    private void SetupForm()
+    {
+        this.Text = "Tides";
+        this.Size = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        this.DoubleBuffered = true;
+    }
+
+    private void CreateTimer()
+    {
         timer = new Timer();
         timer.Enabled   = true;
         timer.Interval  = 33;
         timer.Tick     += AdvanceAnimationOnTimer;
-
-        this.MouseClick += ToggleAnimatorOnMouseClick;
-
-        CreateToolbar();
-
-        animator = new MoonAnimator(32);
     }
 
     private void CreateToolbar()
