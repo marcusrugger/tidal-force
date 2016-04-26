@@ -14,9 +14,10 @@ interface IPresenter
 
 class Presenter : IPresenter
 {
-    private const int DISPLAY_EARTH_RADIUS = 300;
-
+    private readonly int EARTH_RADIUS;
     private readonly Point DISPLAY_CENTER;
+    private readonly double VECTOR_SCALE;
+    private readonly int ORB_SHELL;
     private readonly Size size;
 
     private Graphics graphics;
@@ -28,7 +29,11 @@ class Presenter : IPresenter
 
     private Presenter(Graphics graphics, Size size)
     {
+        int short_dimension = Math.Min(size.Width, size.Height);
         this.DISPLAY_CENTER = new Point(size.Width / 2, size.Height / 2);
+        this.EARTH_RADIUS = 3 * short_dimension / 10;
+        this.VECTOR_SCALE = 0.05 * (double) short_dimension;
+        this.ORB_SHELL = 45 * short_dimension / 100;
         this.graphics = graphics;
         this.size     = size;
     }
@@ -36,10 +41,10 @@ class Presenter : IPresenter
     public void DrawEarth()
     {
         graphics.FillEllipse(Brushes.Aqua,
-                             DISPLAY_CENTER.X - DISPLAY_EARTH_RADIUS + 1,
-                             DISPLAY_CENTER.Y - DISPLAY_EARTH_RADIUS + 1,
-                             2 * DISPLAY_EARTH_RADIUS,
-                             2 * DISPLAY_EARTH_RADIUS);
+                             DISPLAY_CENTER.X - EARTH_RADIUS + 1,
+                             DISPLAY_CENTER.Y - EARTH_RADIUS + 1,
+                             2 * EARTH_RADIUS,
+                             2 * EARTH_RADIUS);
     }
 
     public void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors)
@@ -52,17 +57,17 @@ class Presenter : IPresenter
 
     public void DrawSun(double angle)
     {
-        DrawPlanet(Brushes.Orange, angle);
+        DrawOrb(Brushes.Orange, angle);
     }
 
     public void DrawMoon(double angle)
     {
-        DrawPlanet(Brushes.Gray, angle);
+        DrawOrb(Brushes.Gray, angle);
     }
 
-    private void DrawPlanet(Brush brush, double angle)
+    private void DrawOrb(Brush brush, double angle)
     {
-        var realPt = new Polar(angle, 450).ToCartesian();
+        var realPt = new Polar(angle, ORB_SHELL).ToCartesian();
         var pt     = TransformToDisplayPoint(realPt);
         graphics.FillEllipse(brush, pt.X - 10, pt.Y - 10, 21, 21);
     }
@@ -76,8 +81,8 @@ class Presenter : IPresenter
 
     private Tuple<Point, Point> TransformToDisplayPoints(Tuple<Cartesian, Cartesian> vector)
     {
-        var realP1 = vector.Item1.Scale(DISPLAY_EARTH_RADIUS / Constants.Earth.MEAN_RADIUS);
-        var realP2 = vector.Item2.Scale(50.0).Add(realP1);
+        var realP1 = vector.Item1.Scale(EARTH_RADIUS / Constants.Earth.MEAN_RADIUS);
+        var realP2 = vector.Item2.Scale(VECTOR_SCALE).Add(realP1);
 
         return Tuple.Create(TransformToDisplayPoint(realP1), TransformToDisplayPoint(realP2));
     }
