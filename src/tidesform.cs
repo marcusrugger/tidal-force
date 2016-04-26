@@ -38,7 +38,7 @@ public class TidesForm : Form
         CreateTimer();
         CreateToolbar();
 
-        this.MouseClick += ToggleAnimatorOnMouseClick;
+        this.MouseClick += TogglePauseOnMouseClick;
 
         animator = new MoonAnimator(32);
     }
@@ -55,7 +55,7 @@ public class TidesForm : Form
         timer = new Timer();
         timer.Enabled   = true;
         timer.Interval  = 33;
-        timer.Tick     += AdvanceAnimationOnTimer;
+        timer.Tick     += NextFrameOnTimer;
     }
 
     private void CreateToolbar()
@@ -98,7 +98,7 @@ public class TidesForm : Form
         animator.Draw(presenter);
     }
 
-    private void AdvanceAnimationOnTimer(object sender, System.EventArgs e)
+    private void NextFrameOnTimer(object sender, System.EventArgs e)
     {
         if (!isPaused)
         {
@@ -107,7 +107,7 @@ public class TidesForm : Form
         }
     }
 
-    private void ToggleAnimatorOnMouseClick(object sender, MouseEventArgs e)
+    private void TogglePauseOnMouseClick(object sender, MouseEventArgs e)
     {
         isPaused = !isPaused;
     }
