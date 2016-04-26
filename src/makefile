@@ -1,5 +1,6 @@
 
 SOURCE = 	tides.cs				\
+			tidesform.cs			\
 			algorithms.cs			\
 			animator.cs				\
 			presenter.cs			\

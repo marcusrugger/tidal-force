@@ -7,20 +7,36 @@ interface IAnimator
 {
     void nextFrame();
     void Draw(IPresenter presenter);
+
+    void Reset();
+    bool Fast
+    { set; }
 }
 
 
 abstract class Animator : IAnimator
 {
+    protected int frame_step;
     protected TidalVectors vectorGenerator;
 
     public Animator(int vectorCount)
     {
+        this.frame_step = 1;
         this.vectorGenerator = new TidalVectors(vectorCount);
     }
 
     public abstract void nextFrame();
     public abstract void Draw(IPresenter presenter);
+
+    public virtual void Reset()
+    {
+        Fast = false;
+    }
+
+    public bool Fast
+    {
+        set { frame_step = value ? 5 : 1; }
+    }
 
 }
 
@@ -34,7 +50,7 @@ class MoonAnimator : Animator
 
     public override void nextFrame()
     {
-        lunarAngle = (lunarAngle + 5) % 360;
+        lunarAngle = (lunarAngle + frame_step) % 360;
     }
 
     public override void Draw(IPresenter presenter)
@@ -42,6 +58,12 @@ class MoonAnimator : Animator
         presenter.Draw    (computeFrame());
         presenter.DrawSun (0.0);
         presenter.DrawMoon(Algorithms.ToRadians(lunarAngle));
+    }
+
+    public override void Reset()
+    {
+        base.Reset();
+        lunarAngle = 0;
     }
 
     private IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
@@ -61,7 +83,7 @@ class SunAnimator : Animator
 
     public override void nextFrame()
     {
-        solarAngle = solarAngle - 5;
+        solarAngle = solarAngle - frame_step;
         solarAngle = solarAngle < 0 ? solarAngle + 360 : solarAngle;
     }
 
@@ -70,6 +92,12 @@ class SunAnimator : Animator
         presenter.Draw    (computeFrame());
         presenter.DrawSun (Algorithms.ToRadians(solarAngle));
         presenter.DrawMoon(0.0);
+    }
+
+    public override void Reset()
+    {
+        base.Reset();
+        solarAngle = 0;
     }
 
     private IEnumerable<Tuple<Cartesian, Cartesian>> computeFrame()
@@ -90,7 +118,7 @@ class SunMoonAnimator : Animator
 
     public override void nextFrame()
     {
-        const double stepEarth = 1.0;
+        double stepEarth = (double) frame_step;
         lunarAngle = nextAngle(lunarAngle, (stepEarth /  28.0) - stepEarth);
         solarAngle = nextAngle(solarAngle, (stepEarth / 365.0) - stepEarth);
     }
@@ -111,5 +139,12 @@ class SunMoonAnimator : Animator
         presenter.Draw    (vectorGenerator.compute(lunarRadians, solarRadians));
         presenter.DrawSun (solarRadians);
         presenter.DrawMoon(lunarRadians);
+    }
+
+    public override void Reset()
+    {
+        base.Reset();
+        lunarAngle = 0.0;
+        solarAngle = 0.0;
     }
 }
