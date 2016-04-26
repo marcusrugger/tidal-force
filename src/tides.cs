@@ -7,12 +7,13 @@ using System.Windows.Forms;
 public class Tides : Form
 {
     private IAnimator animator;
-    private int animation_selector;
+    private bool isPaused;
 
     private const int DISPLAY_WIDTH        = 1000;
     private const int DISPLAY_HEIGHT       = 1000;
 
     private Timer timer;
+    private ToolBar toolBar;
 
     static public void Main ()
     {
@@ -21,6 +22,8 @@ public class Tides : Form
 
     public Tides ()
     {
+        isPaused = true;
+
         Text = "Tides";
         Size = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
         DoubleBuffered = true;
@@ -32,8 +35,28 @@ public class Tides : Form
 
         this.MouseClick += ToggleAnimatorOnMouseClick;
 
-        animation_selector = 0;
+        CreateToolbar();
+
         animator = new MoonAnimator(32);
+    }
+
+    private void CreateToolbar()
+    {
+        toolBar = new ToolBar();
+        toolBar.ButtonClick += ToolbarButtonClick;
+        Controls.Add(toolBar);
+
+        ToolBarButton button1 = new ToolBarButton();
+        ToolBarButton button2 = new ToolBarButton();
+        ToolBarButton button3 = new ToolBarButton();
+
+        button1.Text = "Moon";
+        button2.Text = "Sun";
+        button3.Text = "Earth";
+
+        toolBar.Buttons.Add(button1);
+        toolBar.Buttons.Add(button2);
+        toolBar.Buttons.Add(button3);
     }
 
     public void Dispose()
@@ -51,14 +74,21 @@ public class Tides : Form
 
     private void AdvanceAnimationOnTimer(object sender, System.EventArgs e)
     {
-        animator.nextFrame();
-        Invalidate();
+        if (!isPaused)
+        {
+            animator.nextFrame();
+            Invalidate();
+        }
     }
 
     private void ToggleAnimatorOnMouseClick(object sender, MouseEventArgs e)
     {
-        animation_selector = ++animation_selector % 3;
-        switch (animation_selector)
+        isPaused = !isPaused;
+    }
+
+    private void ToolbarButtonClick(Object sender, ToolBarButtonClickEventArgs e)
+    {
+        switch (toolBar.Buttons.IndexOf(e.Button))
         {
             case 0:
                 animator = new MoonAnimator(32);
