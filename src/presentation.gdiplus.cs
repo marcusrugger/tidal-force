@@ -4,16 +4,16 @@ using System.Drawing;
 using System.Linq;
 
 
-class DotnetPresenter : BasePresenter, IPresenter
+class GdiPlusPresenter : BasePresenter, IPresenter
 {
     private Graphics graphics;
 
-    public static DotnetPresenter Create(Graphics graphics, Size size)
+    public static GdiPlusPresenter Create(Graphics graphics, Size size)
     {
-        return new DotnetPresenter(graphics, size);
+        return new GdiPlusPresenter(graphics, size);
     }
 
-    private DotnetPresenter(Graphics graphics, Size size) : base(size.Width, size.Height)
+    private GdiPlusPresenter(Graphics graphics, Size size) : base(size.Width, size.Height)
     {
         this.graphics = graphics;
     }

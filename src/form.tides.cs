@@ -93,7 +93,7 @@ public class TidesForm : Form
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
-        var presenter = DotnetPresenter.Create(e.Graphics, Size);
+        var presenter = GdiPlusPresenter.Create(e.Graphics, Size);
         presenter.DrawEarth();
         animator.Draw(presenter);
     }

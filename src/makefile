@@ -4,7 +4,7 @@ SOURCE = 	tides.cs					\
 			algorithms.cs				\
 			animator.cs					\
 			presentation.base.cs		\
-			presentation.dotnet.cs		\
+			presentation.gdiplus.cs		\
 			tidalvectors.cs				\
 			forcepoints.cs				\
 			forcevectors.cs				\
