@@ -8,9 +8,6 @@ class SunMoonAnimator : Animator
     private double lunarAngle = 0.0;
     private double solarAngle = 0.0;
 
-    public SunMoonAnimator(int vectorCount) : base(vectorCount)
-    {}
-
     public override void NextFrame()
     {
         double stepEarth = (double) frame_step;

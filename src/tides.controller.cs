@@ -17,28 +17,28 @@ class TidesController
     public TidesController(ITidesWindow window)
     {
         this.window   = window;
-        this.animator = new MoonAnimator(32);
+        this.animator = new MoonAnimator();
         this.isPaused = true;
         this.isFast   = false;
     }
 
     public void StartMoonAnimation()
     {
-        animator = new MoonAnimator(32);
+        animator = new MoonAnimator();
         animator.Fast = isFast;
         isPaused = false;
     }
 
     public void StartSunAnimation()
     {
-        animator = new SunAnimator(32);
+        animator = new SunAnimator();
         animator.Fast = isFast;
         isPaused = false;
     }
 
     public void StartSunMoonAnimation()
     {
-        animator = new SunMoonAnimator(32);
+        animator = new SunMoonAnimator();
         animator.Fast = isFast;
         isPaused = false;
     }

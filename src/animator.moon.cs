@@ -7,9 +7,6 @@ class MoonAnimator : Animator
 {
     private int lunarAngle = 0;
 
-    public MoonAnimator(int vectorCount) : base(vectorCount)
-    {}
-
     public override void NextFrame()
     {
         lunarAngle = (lunarAngle + frame_step) % 360;

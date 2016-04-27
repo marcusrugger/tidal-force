@@ -19,7 +19,7 @@ abstract class Animator : IAnimator
     protected int frame_step;
     protected TidalVectors vectorGenerator;
 
-    public Animator(int vectorCount)
+    public Animator(int vectorCount = 32)
     {
         this.frame_step = 1;
         this.vectorGenerator = new TidalVectors(vectorCount);

@@ -7,9 +7,6 @@ class SunAnimator : Animator
 {
     private int solarAngle = 0;
 
-    public SunAnimator(int vectorCount) : base(vectorCount)
-    {}
-
     public override void NextFrame()
     {
         solarAngle = solarAngle - frame_step;

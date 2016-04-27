@@ -22,6 +22,12 @@ NUNIT_PATH			=	/mnt/data/bin/$(NUNIT_VERSION)
 NUNIT_FRAMEWORK		=	$(NUNIT_PATH)/bin/net-4.0/nunit.framework.dll
 NUNIT_CONSOLE		=	$(NUNIT_PATH)/bin/nunit3-console.exe
 
+# PACKAGES	= -pkg:dotnet			\
+# 		      -pkg:gtk-sharp-2.0
+
+APP_NAME	= tides.exe
+PACKAGES	= -pkg:dotnet
+
 
 all:		tides.exe	\
 			tests.dll	\
@@ -38,12 +44,12 @@ runtests:	tests.dll
 	mono $(NUNIT_CONSOLE) tests.dll -noresult
 
 
-run:		tides.exe
-	mono tides.exe
+run:		$(APP_NAME)
+	mono $(APP_NAME)
 
 
-tides.exe:	$(SOURCE)
-	mcs -out:$@ -target:exe -pkg:dotnet $^
+$(APP_NAME):	$(SOURCE)
+	mcs -out:$@ -target:exe $(PACKAGES) $^
 
 
 tests.dll:	test.polar.cs				\
@@ -53,4 +59,4 @@ tests.dll:	test.polar.cs				\
 			test.forcevectors.cs		\
 			test.algorithms.cs			\
 			$(SOURCE)
-	mcs -out:$@ -target:library -pkg:dotnet -r:$(NUNIT_FRAMEWORK) $^
+	mcs -out:$@ -target:library $(PACKAGES) -r:$(NUNIT_FRAMEWORK) $^
