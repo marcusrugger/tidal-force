@@ -36,9 +36,8 @@ class SunMoonAnimator : Animator
         presenter.DrawMoon(lunarRadians);
     }
 
-    public override void Reset()
+    protected override void DoReset()
     {
-        base.Reset();
         lunarAngle = 0.0;
         solarAngle = 0.0;
     }

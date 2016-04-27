@@ -25,9 +25,8 @@ class SunAnimator : Animator
         presenter.DrawMoon(0.0);
     }
 
-    public override void Reset()
+    protected override void DoReset()
     {
-        base.Reset();
         solarAngle = 0;
     }
 }

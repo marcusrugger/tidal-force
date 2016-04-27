@@ -30,6 +30,7 @@ abstract class Animator : IAnimator
 
     public virtual void Reset()
     {
+        DoReset();
         Fast = false;
     }
 
@@ -38,4 +39,6 @@ abstract class Animator : IAnimator
         set { frame_step = value ? 5 : 1; }
     }
 
+    protected virtual void DoReset()
+    {}
 }
