@@ -1,20 +1,20 @@
 using System;
 
 
-interface ITideWindow
+interface ITidesWindow
 {
     void UpdateDisplay();
 }
 
 
-class Controller
+class TidesController
 {
-    private ITideWindow window;
+    private ITidesWindow window;
     private IAnimator animator;
     private bool isPaused;
     private bool isFast;
 
-    public Controller(ITideWindow window)
+    public TidesController(ITidesWindow window)
     {
         this.window   = window;
         this.animator = new MoonAnimator(32);
@@ -79,7 +79,7 @@ class Controller
         }
     }
 
-    public void Draw(IPresenter presenter)
+    public void Draw(ITidesPresenter presenter)
     {
         presenter.DrawEarth();
         animator.Draw(presenter);

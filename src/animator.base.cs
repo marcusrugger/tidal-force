@@ -6,7 +6,7 @@ using System.Linq;
 interface IAnimator
 {
     void NextFrame();
-    void Draw(IPresenter presenter);
+    void Draw(ITidesPresenter presenter);
 
     void Reset();
     bool Fast
@@ -26,7 +26,7 @@ abstract class Animator : IAnimator
     }
 
     public abstract void NextFrame();
-    public abstract void Draw(IPresenter presenter);
+    public abstract void Draw(ITidesPresenter presenter);
 
     public virtual void Reset()
     {

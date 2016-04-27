@@ -5,9 +5,9 @@ using System.Linq;
 using System.Windows.Forms;
 
 
-public class TideWindow : Form, ITideWindow
+public class TidesWinformsWindow : Form, ITidesWindow
 {
-    private Controller controller;
+    private TidesController controller;
 
     private const int DISPLAY_WIDTH        = 1000;
     private const int DISPLAY_HEIGHT       = 1000;
@@ -28,22 +28,21 @@ public class TideWindow : Form, ITideWindow
     private Timer timer;
     private ToolBar toolBar;
 
-    public TideWindow()
+    public TidesWinformsWindow()
     {
-        controller = new Controller(this);
+        controller = new TidesController(this);
 
         SetupForm();
         CreateTimer();
         CreateToolbar();
-
-        this.MouseClick += (sender, e) => controller.TogglePause();
     }
 
     private void SetupForm()
     {
-        this.Text = "Tides";
-        this.Size = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-        this.DoubleBuffered = true;
+        this.Text            = "Tides";
+        this.Size            = new Size(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        this.MouseClick     += (sender, e) => controller.TogglePause();
+        this.DoubleBuffered  = true;
     }
 
     private void CreateTimer()
@@ -94,7 +93,7 @@ public class TideWindow : Form, ITideWindow
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
-        var presenter = GdiPlusPresenter.Create(e.Graphics, Size);
+        var presenter = TidesGdiPlusPresenter.Create(e.Graphics, Size);
         controller.Draw(presenter);
     }
 

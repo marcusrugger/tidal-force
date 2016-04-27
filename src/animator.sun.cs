@@ -16,7 +16,7 @@ class SunAnimator : Animator
         solarAngle = solarAngle < 0 ? solarAngle + 360 : solarAngle;
     }
 
-    public override void Draw(IPresenter presenter)
+    public override void Draw(ITidesPresenter presenter)
     {
         double solarRadians = Algorithms.ToRadians(solarAngle);
 

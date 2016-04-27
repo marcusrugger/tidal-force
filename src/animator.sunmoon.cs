@@ -26,7 +26,7 @@ class SunMoonAnimator : Animator
         return angle;
     }
 
-    public override void Draw(IPresenter presenter)
+    public override void Draw(ITidesPresenter presenter)
     {
         double lunarRadians = Algorithms.ToRadians(lunarAngle);
         double solarRadians = Algorithms.ToRadians(solarAngle);

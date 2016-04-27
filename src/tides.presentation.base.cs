@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 
 
-interface IPresenter
+interface ITidesPresenter
 {
     void DrawEarth();
     void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors);
@@ -13,7 +13,7 @@ interface IPresenter
 }
 
 
-class BasePresenter
+class TidesBasePresenter
 {
     protected readonly int EARTH_RADIUS;
     protected readonly Point DISPLAY_CENTER;
@@ -22,7 +22,7 @@ class BasePresenter
     protected readonly int width;
     protected readonly int height;
 
-    public BasePresenter(int width, int height)
+    public TidesBasePresenter(int width, int height)
     {
         int short_dimension = Math.Min(width, height);
 

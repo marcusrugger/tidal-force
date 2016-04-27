@@ -1,20 +1,20 @@
 
-SOURCE = 	tides.cs					\
-			tidewindow.winforms.cs		\
-			controller.cs				\
-			algorithms.cs				\
-			animator.base.cs			\
-			animator.moon.cs			\
-			animator.sun.cs				\
-			animator.sunmoon.cs			\
-			presentation.base.cs		\
-			presentation.gdiplus.cs		\
-			tidalvectors.cs				\
-			forcepoints.cs				\
-			forcevectors.cs				\
-			constants.cs				\
-			cartesian.cs				\
-			polar.cs					\
+SOURCE = 	tides.cs						\
+			tides.window.winforms.cs		\
+			tides.controller.cs				\
+			tides.presentation.base.cs		\
+			tides.presentation.gdiplus.cs	\
+			animator.base.cs				\
+			animator.moon.cs				\
+			animator.sun.cs					\
+			animator.sunmoon.cs				\
+			algorithms.cs					\
+			tidalvectors.cs					\
+			forcepoints.cs					\
+			forcevectors.cs					\
+			constants.cs					\
+			cartesian.cs					\
+			polar.cs						\
 			gravitationalforce.cs
 
 NUNIT_VERSION		=	nunit-3.2.1

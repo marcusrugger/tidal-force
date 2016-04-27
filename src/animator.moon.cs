@@ -15,7 +15,7 @@ class MoonAnimator : Animator
         lunarAngle = (lunarAngle + frame_step) % 360;
     }
 
-    public override void Draw(IPresenter presenter)
+    public override void Draw(ITidesPresenter presenter)
     {
         double lunarRadians = Algorithms.ToRadians(lunarAngle);
 
