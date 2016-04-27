@@ -3,7 +3,7 @@ using System;
 
 interface ITidesWindow
 {
-    void UpdateDisplay();
+    void Redraw();
 }
 
 
@@ -67,7 +67,7 @@ class TidesController
         animator.Reset();
         isPaused = true;
         isFast   = false;
-        window.UpdateDisplay();
+        window.Redraw();
     }
 
     public void NextFrame()
@@ -75,7 +75,7 @@ class TidesController
         if (!isPaused)
         {
             animator.NextFrame();
-            window.UpdateDisplay();
+            window.Redraw();
         }
     }
 

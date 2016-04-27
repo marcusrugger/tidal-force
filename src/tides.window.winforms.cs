@@ -131,7 +131,7 @@ public class TidesWinformsWindow : Form, ITidesWindow
         }
     }
 
-    public void UpdateDisplay()
+    public void Redraw()
     {
         Invalidate();
     }
