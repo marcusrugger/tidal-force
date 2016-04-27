@@ -36,7 +36,7 @@ public class TideWindow : Form, ITideWindow
         CreateTimer();
         CreateToolbar();
 
-        this.MouseClick += TogglePauseOnMouseClick;
+        this.MouseClick += (sender, e) => controller.TogglePause();
     }
 
     private void SetupForm()
@@ -51,7 +51,7 @@ public class TideWindow : Form, ITideWindow
         timer = new Timer();
         timer.Enabled   = true;
         timer.Interval  = 33;
-        timer.Tick     += NextFrameOnTimer;
+        timer.Tick     += (sender, e) => controller.NextFrame();
     }
 
     private void CreateToolbar()
@@ -83,6 +83,7 @@ public class TideWindow : Form, ITideWindow
 
     public void Dispose()
     {
+        base.Dispose();
         timer.Dispose();
     }
 
@@ -91,16 +92,6 @@ public class TideWindow : Form, ITideWindow
         base.OnPaint(e);
         var presenter = GdiPlusPresenter.Create(e.Graphics, Size);
         controller.Draw(presenter);
-    }
-
-    private void NextFrameOnTimer(object sender, System.EventArgs e)
-    {
-        controller.NextFrame();
-    }
-
-    private void TogglePauseOnMouseClick(object sender, MouseEventArgs e)
-    {
-        controller.TogglePause();
     }
 
     private void ToolbarButtonClick(Object sender, ToolBarButtonClickEventArgs e)
