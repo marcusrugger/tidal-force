@@ -1,6 +1,7 @@
 
 SOURCE = 	tides.cs					\
-			form.tides.cs				\
+			tidewindow.winforms.cs		\
+			controller.cs				\
 			algorithms.cs				\
 			animator.cs					\
 			presentation.base.cs		\

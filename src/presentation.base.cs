@@ -6,6 +6,7 @@ using System.Linq;
 
 interface IPresenter
 {
+    void DrawEarth();
     void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors);
     void DrawSun(double angle);
     void DrawMoon(double angle);

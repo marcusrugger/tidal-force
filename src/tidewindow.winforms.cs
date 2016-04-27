@@ -4,11 +4,10 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-public class TidesForm : Form
+
+public class TideWindow : Form, ITideWindow
 {
-    private IAnimator animator;
-    private bool isPaused;
-    private bool isFast;
+    private Controller controller;
 
     private const int DISPLAY_WIDTH        = 1000;
     private const int DISPLAY_HEIGHT       = 1000;
@@ -29,18 +28,15 @@ public class TidesForm : Form
     private Timer timer;
     private ToolBar toolBar;
 
-    public TidesForm()
+    public TideWindow()
     {
-        isPaused = true;
-        isFast = false;
+        controller = new Controller(this);
 
         SetupForm();
         CreateTimer();
         CreateToolbar();
 
         this.MouseClick += TogglePauseOnMouseClick;
-
-        animator = new MoonAnimator(32);
     }
 
     private void SetupForm()
@@ -94,22 +90,17 @@ public class TidesForm : Form
     {
         base.OnPaint(e);
         var presenter = GdiPlusPresenter.Create(e.Graphics, Size);
-        presenter.DrawEarth();
-        animator.Draw(presenter);
+        controller.Draw(presenter);
     }
 
     private void NextFrameOnTimer(object sender, System.EventArgs e)
     {
-        if (!isPaused)
-        {
-            animator.NextFrame();
-            Invalidate();
-        }
+        controller.NextFrame();
     }
 
     private void TogglePauseOnMouseClick(object sender, MouseEventArgs e)
     {
-        isPaused = !isPaused;
+        controller.TogglePause();
     }
 
     private void ToolbarButtonClick(Object sender, ToolBarButtonClickEventArgs e)
@@ -117,45 +108,37 @@ public class TidesForm : Form
         switch ((ToolbarButtons) toolBar.Buttons.IndexOf(e.Button))
         {
             case ToolbarButtons.MOON_ANIMATION:
-                animator = new MoonAnimator(32);
-                animator.Fast = isFast;
-                isPaused = false;
+                controller.StartMoonAnimation();
                 break;
 
             case ToolbarButtons.SUN_ANIMATION:
-                animator = new SunAnimator(32);
-                animator.Fast = isFast;
-                isPaused = false;
+                controller.StartSunAnimation();
                 break;
 
             case ToolbarButtons.SUN_MOON_ANIMATION:
-                animator = new SunMoonAnimator(32);
-                animator.Fast = isFast;
-                isPaused = false;
+                controller.StartSunMoonAnimation();
                 break;
 
             case ToolbarButtons.PAUSE:
-                isPaused = true;
+                controller.TogglePause();
                 break;
 
             case ToolbarButtons.SLOW:
-                isFast = false;
-                animator.Fast = false;
-                isPaused = false;
+                controller.Slow();
                 break;
 
             case ToolbarButtons.FAST:
-                isFast = true;
-                animator.Fast = true;
-                isPaused = false;
+                controller.Fast();
                 break;
 
             case ToolbarButtons.RESET:
-                animator.Reset();
-                isFast = false;
-                isPaused = true;
-                Invalidate();
+                controller.Reset();
                 break;
         }
+    }
+
+    public void UpdateDisplay()
+    {
+        Invalidate();
     }
 }
