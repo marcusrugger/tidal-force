@@ -81,10 +81,14 @@ public class TideWindow : Form, ITideWindow
         AddButton("Reset");
     }
 
-    public void Dispose()
+    protected override void Dispose(bool disposing)
     {
-        base.Dispose();
-        timer.Dispose();
+        if (disposing)
+        {
+            timer.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 
     protected override void OnPaint(PaintEventArgs e)
