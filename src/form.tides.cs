@@ -93,7 +93,7 @@ public class TidesForm : Form
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
-        var presenter = Presenter.Create(e.Graphics, Size);
+        var presenter = DotnetPresenter.Create(e.Graphics, Size);
         presenter.DrawEarth();
         animator.Draw(presenter);
     }
@@ -102,7 +102,7 @@ public class TidesForm : Form
     {
         if (!isPaused)
         {
-            animator.nextFrame();
+            animator.NextFrame();
             Invalidate();
         }
     }

@@ -5,7 +5,7 @@ using System.Linq;
 
 interface IAnimator
 {
-    void nextFrame();
+    void NextFrame();
     void Draw(IPresenter presenter);
 
     void Reset();
@@ -25,7 +25,7 @@ abstract class Animator : IAnimator
         this.vectorGenerator = new TidalVectors(vectorCount);
     }
 
-    public abstract void nextFrame();
+    public abstract void NextFrame();
     public abstract void Draw(IPresenter presenter);
 
     public virtual void Reset()
@@ -48,7 +48,7 @@ class MoonAnimator : Animator
     public MoonAnimator(int vectorCount) : base(vectorCount)
     {}
 
-    public override void nextFrame()
+    public override void NextFrame()
     {
         lunarAngle = (lunarAngle + frame_step) % 360;
     }
@@ -81,7 +81,7 @@ class SunAnimator : Animator
     public SunAnimator(int vectorCount) : base(vectorCount)
     {}
 
-    public override void nextFrame()
+    public override void NextFrame()
     {
         solarAngle = solarAngle - frame_step;
         solarAngle = solarAngle < 0 ? solarAngle + 360 : solarAngle;
@@ -116,7 +116,7 @@ class SunMoonAnimator : Animator
     public SunMoonAnimator(int vectorCount) : base(vectorCount)
     {}
 
-    public override void nextFrame()
+    public override void NextFrame()
     {
         double stepEarth = (double) frame_step;
         lunarAngle = nextAngle(lunarAngle, (stepEarth /  28.0) - stepEarth);

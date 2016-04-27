@@ -1,15 +1,16 @@
 
-SOURCE = 	tides.cs				\
-			tidesform.cs			\
-			algorithms.cs			\
-			animator.cs				\
-			presenter.cs			\
-			tidalvectors.cs			\
-			forcepoints.cs			\
-			forcevectors.cs			\
-			constants.cs			\
-			cartesian.cs			\
-			polar.cs				\
+SOURCE = 	tides.cs					\
+			form.tides.cs				\
+			algorithms.cs				\
+			animator.cs					\
+			presentation.base.cs		\
+			presentation.dotnet.cs		\
+			tidalvectors.cs				\
+			forcepoints.cs				\
+			forcevectors.cs				\
+			constants.cs				\
+			cartesian.cs				\
+			polar.cs					\
 			gravitationalforce.cs
 
 NUNIT_VERSION		=	nunit-3.2.1
