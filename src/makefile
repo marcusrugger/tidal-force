@@ -3,7 +3,10 @@ SOURCE = 	tides.cs					\
 			tidewindow.winforms.cs		\
 			controller.cs				\
 			algorithms.cs				\
-			animator.cs					\
+			animator.base.cs			\
+			animator.moon.cs			\
+			animator.sun.cs				\
+			animator.sunmoon.cs			\
 			presentation.base.cs		\
 			presentation.gdiplus.cs		\
 			tidalvectors.cs				\
