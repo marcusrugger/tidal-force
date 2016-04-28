@@ -6,6 +6,6 @@ public class Tides
 {
     static public void Main ()
     {
-        Application.Run(new TidesWinformsWindow());
+        Application.Run( new TidesWinformsWindow(TidesController.Create) );
     }
 }

@@ -14,7 +14,12 @@ class TidesController
     private bool isPaused;
     private bool isFast;
 
-    public TidesController(ITidesWindow window)
+    public static TidesController Create(ITidesWindow window)
+    {
+        return new TidesController(window);
+    }
+
+    private TidesController(ITidesWindow window)
     {
         this.window   = window;
         this.animator = new MoonAnimator();

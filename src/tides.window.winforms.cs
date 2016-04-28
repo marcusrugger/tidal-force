@@ -1,40 +1,24 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 
-public class TidesWinformsWindow : Form, ITidesWindow
+class TidesWinformsWindow : Form, ITidesWindow
 {
     private TidesController controller;
 
     private const int DISPLAY_WIDTH        = 1000;
     private const int DISPLAY_HEIGHT       = 1000;
 
-    enum ToolbarButtons
-    {
-        MOON_ANIMATION = 0,
-        SUN_ANIMATION,
-        SUN_MOON_ANIMATION,
-        SEPARATOR,
-        PAUSE,
-        SLOW,
-        FAST,
-        SEPARATOR2,
-        RESET
-    };
-
     private Timer timer;
-    private ToolBar toolBar;
 
-    public TidesWinformsWindow()
+    public TidesWinformsWindow(Func<ITidesWindow, TidesController> fnCreateController)
     {
-        controller = new TidesController(this);
+        controller = fnCreateController(this);
 
         SetupForm();
         CreateTimer();
-        CreateToolbar();
+        Controls.Add( new TidesToolbar(controller) );
     }
 
     private void SetupForm()
@@ -53,33 +37,6 @@ public class TidesWinformsWindow : Form, ITidesWindow
         timer.Tick     += (sender, e) => controller.NextFrame();
     }
 
-    private void CreateToolbar()
-    {
-        toolBar = new ToolBar();
-        toolBar.ButtonClick += ToolbarButtonClick;
-        Controls.Add(toolBar);
-
-        ToolBarButton separator = new ToolBarButton();
-        separator.Style = ToolBarButtonStyle.Separator;
-
-        Action<string> AddButton = text =>
-        {
-            ToolBarButton button = new ToolBarButton();
-            button.Text = text;
-            toolBar.Buttons.Add(button);
-        };
-
-        AddButton("Moon");
-        AddButton("Sun");
-        AddButton("Earth");
-        toolBar.Buttons.Add(separator);
-        AddButton("Pause");
-        AddButton("Slow");
-        AddButton("Fast");
-        toolBar.Buttons.Add(separator);
-        AddButton("Reset");
-    }
-
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -95,40 +52,6 @@ public class TidesWinformsWindow : Form, ITidesWindow
         base.OnPaint(e);
         var presenter = TidesGdiPlusPresenter.Create(e.Graphics, Size);
         controller.Draw(presenter);
-    }
-
-    private void ToolbarButtonClick(Object sender, ToolBarButtonClickEventArgs e)
-    {
-        switch ((ToolbarButtons) toolBar.Buttons.IndexOf(e.Button))
-        {
-            case ToolbarButtons.MOON_ANIMATION:
-                controller.StartMoonAnimation();
-                break;
-
-            case ToolbarButtons.SUN_ANIMATION:
-                controller.StartSunAnimation();
-                break;
-
-            case ToolbarButtons.SUN_MOON_ANIMATION:
-                controller.StartSunMoonAnimation();
-                break;
-
-            case ToolbarButtons.PAUSE:
-                controller.TogglePause();
-                break;
-
-            case ToolbarButtons.SLOW:
-                controller.Slow();
-                break;
-
-            case ToolbarButtons.FAST:
-                controller.Fast();
-                break;
-
-            case ToolbarButtons.RESET:
-                controller.Reset();
-                break;
-        }
     }
 
     public void Redraw()

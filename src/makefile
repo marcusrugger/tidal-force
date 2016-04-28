@@ -1,6 +1,7 @@
 
 SOURCE = 	tides.cs						\
 			tides.window.winforms.cs		\
+			tides.toolbar.winforms.cs		\
 			tides.controller.cs				\
 			tides.presentation.base.cs		\
 			tides.presentation.gdiplus.cs	\
