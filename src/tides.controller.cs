@@ -1,13 +1,13 @@
 using System;
 
 
-interface ITidesWindow
+public interface ITidesWindow
 {
     void Redraw();
 }
 
 
-interface ITidesController
+public interface ITidesController
 {
     void StartMoonAnimation();
     void StartSunAnimation();
@@ -21,7 +21,7 @@ interface ITidesController
 }
 
 
-class TidesController : ITidesController
+public class TidesController : ITidesController
 {
     private ITidesWindow window;
     private IAnimator animator;

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 
 
-interface ITidesPresenter
+public interface ITidesPresenter
 {
     void DrawEarth();
     void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors);
@@ -13,7 +13,7 @@ interface ITidesPresenter
 }
 
 
-class TidesBasePresenter
+public class TidesBasePresenter
 {
     protected readonly int EARTH_RADIUS;
     protected readonly Point DISPLAY_CENTER;
