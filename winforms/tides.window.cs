@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 
-class TidesWinformsWindow : Form, ITidesWindow
+class TidesWindow : Form, ITidesWindow
 {
     private ITidesController controller;
 
@@ -12,7 +12,7 @@ class TidesWinformsWindow : Form, ITidesWindow
 
     private Timer timer;
 
-    public TidesWinformsWindow(Func<ITidesWindow, ITidesController> fnCreateController)
+    public TidesWindow(Func<ITidesWindow, ITidesController> fnCreateController)
     {
         controller = fnCreateController(this);
 
@@ -50,7 +50,7 @@ class TidesWinformsWindow : Form, ITidesWindow
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
-        var presenter = TidesGdiPlusPresenter.Create(e.Graphics, Size);
+        var presenter = TidesPresenter.Create(e.Graphics, Size);
         controller.Draw(presenter);
     }
 

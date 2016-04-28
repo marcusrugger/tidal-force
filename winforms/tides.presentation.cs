@@ -4,16 +4,16 @@ using System.Drawing;
 using System.Linq;
 
 
-class TidesGdiPlusPresenter : TidesBasePresenter, ITidesPresenter
+class TidesPresenter : TidesBasePresenter, ITidesPresenter
 {
     private Graphics graphics;
 
-    public static TidesGdiPlusPresenter Create(Graphics graphics, Size size)
+    public static TidesPresenter Create(Graphics graphics, Size size)
     {
-        return new TidesGdiPlusPresenter(graphics, size);
+        return new TidesPresenter(graphics, size);
     }
 
-    private TidesGdiPlusPresenter(Graphics graphics, Size size) : base(size.Width, size.Height)
+    private TidesPresenter(Graphics graphics, Size size) : base(size.Width, size.Height)
     {
         this.graphics = graphics;
     }
