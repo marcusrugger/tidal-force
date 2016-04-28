@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 class TidesToolbar : ToolBar
 {
-    private TidesController controller;
+    private ITidesController controller;
 
     enum ToolbarButtons
     {
@@ -19,7 +19,7 @@ class TidesToolbar : ToolBar
         RESET
     };
 
-    public TidesToolbar(TidesController controller) : base()
+    public TidesToolbar(ITidesController controller) : base()
     {
         this.controller = controller;
         PopulateToolbar();

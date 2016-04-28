@@ -7,14 +7,28 @@ interface ITidesWindow
 }
 
 
-class TidesController
+interface ITidesController
+{
+    void StartMoonAnimation();
+    void StartSunAnimation();
+    void StartSunMoonAnimation();
+    void TogglePause();
+    void Slow();
+    void Fast();
+    void Reset();
+    void NextFrame();
+    void Draw(ITidesPresenter presenter);
+}
+
+
+class TidesController : ITidesController
 {
     private ITidesWindow window;
     private IAnimator animator;
     private bool isPaused;
     private bool isFast;
 
-    public static TidesController Create(ITidesWindow window)
+    public static ITidesController Create(ITidesWindow window)
     {
         return new TidesController(window);
     }

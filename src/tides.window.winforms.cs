@@ -5,14 +5,14 @@ using System.Windows.Forms;
 
 class TidesWinformsWindow : Form, ITidesWindow
 {
-    private TidesController controller;
+    private ITidesController controller;
 
     private const int DISPLAY_WIDTH        = 1000;
     private const int DISPLAY_HEIGHT       = 1000;
 
     private Timer timer;
 
-    public TidesWinformsWindow(Func<ITidesWindow, TidesController> fnCreateController)
+    public TidesWinformsWindow(Func<ITidesWindow, ITidesController> fnCreateController)
     {
         controller = fnCreateController(this);
 
