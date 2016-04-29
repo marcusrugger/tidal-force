@@ -1,6 +1,7 @@
 
-SOURCE = 	tides.cs		\
-			tides.window.cs
+SOURCE = 	tides.cs				\
+			tides.window.cs			\
+			tides.presentation.cs
 
 
 ROOT_DIR	= ..
@@ -9,7 +10,6 @@ APP_NAME	= tides-gtk.exe
 DLL_NAME	= $(BIN_DIR)/tides.dll
 TARGET		= $(BIN_DIR)/$(APP_NAME)
 
-# PACKAGES	= -pkg:dotnet
 PACKAGES	= -pkg:gtk-sharp-3.0
 
 
@@ -18,6 +18,10 @@ all:		$(TARGET)
 
 clean:
 	-rm $(TARGET)
+
+
+run:		$(TARGET)
+	mono $(TARGET)
 
 
 $(TARGET):	$(SOURCE)

@@ -21,5 +21,9 @@ clean:
 	-rm $(TARGET)
 
 
+run:		$(TARGET)
+	mono $(TARGET)
+
+
 $(TARGET):	$(SOURCE)
 	mcs -out:$@ -target:exe $(PACKAGES) -r:$(DLL_NAME) $(SOURCE)

@@ -1,7 +1,7 @@
 using System;
 
 
-class Constants
+public class Constants
 {
     public class Geometry
     {
@@ -16,7 +16,7 @@ class Constants
 
     public class Moon
     {
-        public const double MASS            =   7.342e22;       // kg
+        public const double MASS            =  73.42e21;       // kg
         public const double MEAN_RADIUS     =   1.7371e6;       // m
         public const double MEAN_DISTANCE   = 370.310054e6;     // m
         public const double SEMI_MAJOR_AXIS = 384.399e6;        // m

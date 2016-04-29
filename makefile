@@ -31,7 +31,7 @@ makegtk:
 
 
 rungtk:
-	mono $(BIN_DIR)/$(APP_GTK)
+	$(MAKE) -C gtk run
 
 
 $(BIN_DIR):
