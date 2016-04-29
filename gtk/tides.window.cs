@@ -1,4 +1,5 @@
 using Gtk;
+using Cairo;
 using System;
 
 
@@ -6,7 +7,7 @@ class TidesWindow : Window, ITidesWindow
 {
     ITidesController controller;
 
-    public TidesWindow(Func<ITidesWindow, ITidesController> fnCreateController) : base("helloworld")
+    public TidesWindow(Func<ITidesWindow, ITidesController> fnCreateController) : base("Tidal Forces")
     {
         this.controller = fnCreateController(this);
 
@@ -20,12 +21,7 @@ class TidesWindow : Window, ITidesWindow
 
         SetDefaultSize(1000, 1000);
 
-        DeleteEvent += delete_event;
-    }
-
-    void delete_event(object obj, DeleteEventArgs args)
-    {
-        Application.Quit();
+        DeleteEvent += (obj, args) => Application.Quit();
     }
 
     void hello(object obj, EventArgs args)

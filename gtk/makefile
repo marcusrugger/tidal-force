@@ -10,7 +10,7 @@ DLL_NAME	= $(BIN_DIR)/tides.dll
 TARGET		= $(BIN_DIR)/$(APP_NAME)
 
 # PACKAGES	= -pkg:dotnet
-PACKAGES	= -pkg:gtk-sharp-2.0
+PACKAGES	= -pkg:gtk-sharp-3.0
 
 
 all:		$(TARGET)
