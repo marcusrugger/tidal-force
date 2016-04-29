@@ -14,8 +14,9 @@ class TidesWindow : Window, ITidesWindow
 
         DeleteEvent += (obj, args) => Application.Quit();
 
+        GLib.Timeout.Add(33, () => { controller.NextFrame(); return true; });
+
         this.controller.StartMoonAnimation();
-        for (int a = 0; a < 100; a++) this.controller.NextFrame();
     }
 
     protected override bool OnDrawn(Cairo.Context context)
