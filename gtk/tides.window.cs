@@ -13,6 +13,9 @@ class TidesWindow : Window, ITidesWindow
         SetDefaultSize(1000, 1000);
 
         DeleteEvent += (obj, args) => Application.Quit();
+
+        this.controller.StartMoonAnimation();
+        for (int a = 0; a < 100; a++) this.controller.NextFrame();
     }
 
     protected override bool OnDrawn(Cairo.Context context)
@@ -24,5 +27,6 @@ class TidesWindow : Window, ITidesWindow
 
     public void Redraw()
     {
+        QueueDraw();
     }
 }
