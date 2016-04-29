@@ -10,22 +10,16 @@ class TidesWindow : Window, ITidesWindow
     {
         this.controller = fnCreateController(this);
 
-        // Set up a button object.
-        // Button btn = new Button ("Hello World");
-        // btn.Clicked += hello;
-        // Add(btn);
-
-        // var graphics = Gtk.DotNet.Graphics.FromDrawable(window);
-        // graphics.DrawLine(Pens.Red, new Point(100, 100), new Point(200, 200));
-
         SetDefaultSize(1000, 1000);
 
         DeleteEvent += (obj, args) => Application.Quit();
     }
 
-    void hello(object obj, EventArgs args)
+    protected override bool OnDrawn(Cairo.Context context)
     {
-        Console.WriteLine("Hello World");
+        bool result = base.OnDrawn(context);
+        controller.Draw( TidesPresenter.Create(context) );
+        return result;
     }
 
     public void Redraw()
