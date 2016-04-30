@@ -1,37 +1,38 @@
 
-BIN_DIR			= bin
-APP_WINFORMS	= tides-winforms.exe
-APP_GTK			= tides-gtk.exe
+BIN_DIR		= bin
+TIDES		= src
+WINFORMS	= winforms
+GTKSHARP	= gtk
 
 
 all:	$(BIN_DIR)
-	$(MAKE) -C src
-	$(MAKE) -C winforms
-	$(MAKE) -C gtk
+	$(MAKE) -C $(TIDES)
+	$(MAKE) -C $(WINFORMS)
+	$(MAKE) -C $(GTKSHARP)
 
 
 clean:
-	$(MAKE) -C src clean
-	$(MAKE) -C winforms clean
-	$(MAKE) -C gtk clean
+	$(MAKE) -C $(TIDES) clean
+	$(MAKE) -C $(WINFORMS) clean
+	$(MAKE) -C $(GTKSHARP) clean
 
 
 makewinforms:
-	$(MAKE) -C src
-	$(MAKE) -C winforms
+	$(MAKE) -C $(TIDES)
+	$(MAKE) -C $(WINFORMS)
 
 
 runwinforms:
-	mono $(BIN_DIR)/$(APP_WINFORMS)
+	$(MAKE) -C $(WINFORMS) run
 
 
 makegtk:
-	$(MAKE) -C src
-	$(MAKE) -C gtk
+	$(MAKE) -C $(TIDES)
+	$(MAKE) -C $(GTKSHARP)
 
 
 rungtk:
-	$(MAKE) -C gtk run
+	$(MAKE) -C $(GTKSHARP) run
 
 
 $(BIN_DIR):
