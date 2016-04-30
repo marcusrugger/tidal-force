@@ -4,27 +4,29 @@ using System.Drawing;
 using System.Linq;
 
 
-class TidesPresenter : TidesBasePresenter, ITidesPresenter
+class TidesPresenter : ITidesPresenter
 {
     private Graphics graphics;
+    private DisplayParameters display;
 
-    public static TidesPresenter Create(Graphics graphics, Size size)
+    public static TidesPresenter Create(Graphics graphics, DisplayParameters display)
     {
-        return new TidesPresenter(graphics, size);
+        return new TidesPresenter(graphics, display);
     }
 
-    private TidesPresenter(Graphics graphics, Size size) : base(size.Width, size.Height)
+    private TidesPresenter(Graphics graphics, DisplayParameters display)
     {
         this.graphics = graphics;
+        this.display  = display;
     }
 
     public void DrawEarth()
     {
         graphics.FillEllipse(Brushes.Aqua,
-                             DISPLAY_CENTER_X - EARTH_RADIUS + 1,
-                             DISPLAY_CENTER_Y - EARTH_RADIUS + 1,
-                             2 * EARTH_RADIUS,
-                             2 * EARTH_RADIUS);
+                             display.DisplayCenterX - display.EarthRadius + 1,
+                             display.DisplayCenterY - display.EarthRadius + 1,
+                             2 * display.EarthRadius,
+                             2 * display.EarthRadius);
     }
 
     public void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors)
@@ -45,7 +47,7 @@ class TidesPresenter : TidesBasePresenter, ITidesPresenter
 
     private void DrawOrb(Brush brush, double angle)
     {
-        var realPt = new Polar(angle, ORB_SHELL).ToCartesian();
+        var realPt = new Polar(angle, display.OrbShell).ToCartesian();
         var pt     = ToDisplayPoint(realPt);
         graphics.FillEllipse(brush, pt.X - 10, pt.Y - 10, 21, 21);
     }
@@ -65,8 +67,8 @@ class TidesPresenter : TidesBasePresenter, ITidesPresenter
 
     private Tuple<Point, Point> ToDisplayPoints(Tuple<Cartesian, Cartesian> vector)
     {
-        var realP1 = vector.Item1.Scale(EARTH_RADIUS / Constants.Earth.MEAN_RADIUS);
-        var realP2 = vector.Item2.Scale(VECTOR_SCALE).Add(realP1);
+        var realP1 = vector.Item1.Scale(display.EarthRadius / Constants.Earth.MEAN_RADIUS);
+        var realP2 = vector.Item2.Scale(display.VectorScale).Add(realP1);
 
         return Tuple.Create(ToDisplayPoint(realP1), ToDisplayPoint(realP2));
     }
@@ -74,8 +76,8 @@ class TidesPresenter : TidesBasePresenter, ITidesPresenter
     private Point ToDisplayPoint(Cartesian realPt)
     {
         var displayPt = realPt.ToPoint();
-        displayPt.Offset(DISPLAY_CENTER_X, DISPLAY_CENTER_Y);
-        displayPt.Y = height - displayPt.Y;
+        displayPt.Offset(display.DisplayCenterX, display.DisplayCenterY);
+        displayPt.Y = display.Height - displayPt.Y;
         return displayPt;
     }
 }

@@ -13,17 +13,17 @@ public interface ITidesPresenter
 }
 
 
-public class TidesBasePresenter
+public class DisplayParameters
 {
-    protected readonly int EARTH_RADIUS;
-    protected readonly int DISPLAY_CENTER_X;
-    protected readonly int DISPLAY_CENTER_Y;
-    protected readonly double VECTOR_SCALE;
-    protected readonly int ORB_SHELL;
-    protected readonly int width;
-    protected readonly int height;
+    private readonly int EARTH_RADIUS;
+    private readonly int DISPLAY_CENTER_X;
+    private readonly int DISPLAY_CENTER_Y;
+    private readonly double VECTOR_SCALE;
+    private readonly int ORB_SHELL;
+    private readonly int width;
+    private readonly int height;
 
-    public TidesBasePresenter(int width, int height)
+    public DisplayParameters(int width, int height)
     {
         int short_dimension = Math.Min(width, height);
 
@@ -34,5 +34,37 @@ public class TidesBasePresenter
         this.EARTH_RADIUS = 3 * short_dimension / 10;
         this.VECTOR_SCALE = 0.05 * (double) short_dimension;
         this.ORB_SHELL = 45 * short_dimension / 100;
+    }
+
+    public int DisplayCenterX
+    { get { return DISPLAY_CENTER_X;} }
+
+    public int DisplayCenterY
+    { get { return DISPLAY_CENTER_Y;} }
+
+    public int EarthRadius
+    { get { return EARTH_RADIUS;} }
+
+    public double VectorScale
+    { get { return VECTOR_SCALE;} }
+
+    public int OrbShell
+    { get { return ORB_SHELL;} }
+
+    public int Width
+    { get { return width;} }
+
+    public int Height
+    { get { return height;} }
+
+
+    public int ToDisplayX(double x)
+    {
+        return DisplayCenterX + (int) (x + 0.5);
+    }
+
+    public int ToDisplayY(double y)
+    {
+        return Height - (DisplayCenterY + (int) (y + 0.5));
     }
 }

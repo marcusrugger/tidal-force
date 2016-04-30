@@ -4,18 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-class TidesPresenter : TidesBasePresenter, ITidesPresenter
+class TidesPresenter : ITidesPresenter
 {
     Cairo.Context context;
+    DisplayParameters display;
 
-    public static TidesPresenter Create(Cairo.Context context, int width, int height)
+    public static TidesPresenter Create(Cairo.Context context, DisplayParameters display)
     {
-        return new TidesPresenter(context, width, height);
+        return new TidesPresenter(context, display);
     }
 
-    private TidesPresenter(Cairo.Context context, int width, int height) : base(width, height)
+    private TidesPresenter(Cairo.Context context, DisplayParameters display)
     {
         this.context = context;
+        this.display = display;
     }
 
     public void DrawEarth()
@@ -23,7 +25,7 @@ class TidesPresenter : TidesBasePresenter, ITidesPresenter
         context.LineWidth = 1.0;
         context.SetSourceRGB(0.0, 0.0, 0.0);
 
-        context.Arc(DISPLAY_CENTER_X, DISPLAY_CENTER_Y, EARTH_RADIUS, 0, 2*Math.PI);
+        context.Arc(display.DisplayCenterX, display.DisplayCenterY, display.EarthRadius, 0, 2*Math.PI);
 
         context.SetSourceRGB(0.0, 1.0, 1.0);
         context.Fill();
@@ -66,24 +68,14 @@ class TidesPresenter : TidesBasePresenter, ITidesPresenter
 
     private void DrawOrb(double angle, double red, double green, double blue)
     {
-        var realPt = new Polar(angle, ORB_SHELL).ToCartesian();
+        var realPt = new Polar(angle, display.OrbShell).ToCartesian();
 
         context.LineWidth = 1.0;
         context.SetSourceRGB(0.0, 0.0, 0.0);
-        context.Arc( ToDisplayX(realPt.x), ToDisplayY(realPt.y), 10, 0, 2 * Math.PI );
+        context.Arc( display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y), 10, 0, 2 * Math.PI );
 
         context.SetSourceRGB(red, green, blue);
         context.Fill();
-    }
-    
-    private int ToDisplayX(double x)
-    {
-        return DISPLAY_CENTER_X + (int) (x + 0.5);
-    }
-    
-    private int ToDisplayY(double y)
-    {
-        return height - (DISPLAY_CENTER_Y + (int) (y + 0.5));
     }
 
     private IEnumerable<Tuple<Point, Point>>
@@ -94,15 +86,15 @@ class TidesPresenter : TidesBasePresenter, ITidesPresenter
 
     private Tuple<Point, Point> ToDisplayPoints(Tuple<Cartesian, Cartesian> vector)
     {
-        var realP1 = vector.Item1.Scale(EARTH_RADIUS / Constants.Earth.MEAN_RADIUS);
-        var realP2 = vector.Item2.Scale(VECTOR_SCALE).Add(realP1);
+        var realP1 = vector.Item1.Scale(display.EarthRadius / Constants.Earth.MEAN_RADIUS);
+        var realP2 = vector.Item2.Scale(display.VectorScale).Add(realP1);
 
         return Tuple.Create(ToDisplayPoint(realP1), ToDisplayPoint(realP2));
     }
 
     private Point ToDisplayPoint(Cartesian realPt)
     {
-        return new Point(ToDisplayX(realPt.x), ToDisplayY(realPt.y));
+        return new Point(display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y));
     }
 
     class Point

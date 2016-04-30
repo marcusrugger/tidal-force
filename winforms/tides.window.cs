@@ -50,7 +50,7 @@ class TidesWindow : Form, ITidesWindow
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
-        var presenter = TidesPresenter.Create(e.Graphics, Size);
+        var presenter = TidesPresenter.Create(e.Graphics, new DisplayParameters(Size.Width, Size.Height));
         controller.Draw(presenter);
     }
 

@@ -50,12 +50,20 @@ class TidesWindow : Window, ITidesWindow
     protected override bool OnDrawn(Cairo.Context context)
     {
         bool result = base.OnDrawn(context);
-
-        int width  = 0;
-        int height = 0;
-        GetSize(out width, out height);
-        controller.Draw( TidesPresenter.Create(context, width, height) );
+        controller.Draw( TidesPresenter.Create(context, DisplayParams) );
         return result;
+    }
+    
+    private DisplayParameters DisplayParams
+    {
+        get
+        {
+            int width  = 0;
+            int height = 0;
+            GetSize(out width, out height);
+
+            return new DisplayParameters(width, height);
+        }
     }
 
     public void Redraw()
