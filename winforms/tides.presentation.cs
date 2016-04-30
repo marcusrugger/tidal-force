@@ -4,10 +4,105 @@ using System.Drawing;
 using System.Linq;
 
 
+class DrawObject
+{
+    protected Graphics graphics;
+    protected DisplayParameters display;
+
+    public DrawObject(Graphics graphics, DisplayParameters display)
+    {
+        this.graphics = graphics;
+        this.display = display;
+    }
+
+    protected Point ToDisplayPoint(Cartesian realPt)
+    {
+        return new Point( display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y) );
+    }
+}
+
+
+class DrawOrb : DrawObject
+{
+    Brush brush;
+
+    public DrawOrb(Graphics graphics, DisplayParameters display, Brush brush)
+    : base(graphics, display)
+    {
+        this.brush = brush;
+    }
+
+    public void Draw(double angle)
+    {
+        var realPt = new Polar(angle, display.OrbShell).ToCartesian();
+        var pt     = ToDisplayPoint(realPt);
+        graphics.FillEllipse(brush, pt.X - 10, pt.Y - 10, 21, 21);
+    }
+}
+
+
+class DrawSegment : DrawObject
+{
+    private Pen   colorLine = Pens.Black;
+    private Brush colorPt1  = Brushes.Blue;
+    private Brush colorPt2  = Brushes.Red;
+
+    public DrawSegment(Graphics graphics, DisplayParameters display)
+    : base(graphics, display)
+    {}
+    
+    public void Draw(Cartesian p1, Cartesian p2)
+    {
+        Draw( ToDisplayPoint(p1), ToDisplayPoint(p2) );
+    }
+
+    private void Draw(Point p1, Point p2)
+    {
+        DrawLine(colorLine, p1, p2);
+        DrawEndpoint(colorPt1, p1);
+        DrawEndpoint(colorPt2, p2);
+    }
+    
+    private void DrawLine(Pen pen, Point p1, Point p2)
+    {
+        graphics.DrawLine(pen, p1, p2);
+    }
+    
+    private void DrawEndpoint(Brush brush, Point p)
+    {
+        graphics.FillEllipse(brush, p.X - 2, p.Y - 2, 5, 5);
+    }
+}
+
+
+class DrawEarth : DrawObject
+{
+    public DrawEarth(Graphics graphics, DisplayParameters display)
+    : base(graphics, display)
+    {}
+
+    public void Draw()
+    {
+        graphics.FillEllipse(Brushes.Aqua,
+                             display.DisplayCenterX - display.EarthRadius + 1,
+                             display.DisplayCenterY - display.EarthRadius + 1,
+                             2 * display.EarthRadius,
+                             2 * display.EarthRadius);
+    }
+}
+
+
 class TidesPresenter : ITidesPresenter
 {
-    private Graphics graphics;
     private DisplayParameters display;
+    
+    Brush colorSun  = Brushes.Orange;
+    Brush colorMoon = Brushes.Gray;
+
+    DrawOrb orbMoon;
+    DrawOrb orbSun;
+    DrawSegment segment;
+    DrawEarth earth;
 
     public static TidesPresenter Create(Graphics graphics, DisplayParameters display)
     {
@@ -16,68 +111,32 @@ class TidesPresenter : ITidesPresenter
 
     private TidesPresenter(Graphics graphics, DisplayParameters display)
     {
-        this.graphics = graphics;
-        this.display  = display;
+        this.display = display;
+
+        orbMoon = new DrawOrb(graphics, display, colorMoon);
+        orbSun  = new DrawOrb(graphics, display, colorSun);
+        segment = new DrawSegment(graphics, display);
+        earth   = new DrawEarth(graphics, display);
     }
 
     public void DrawEarth()
     {
-        graphics.FillEllipse(Brushes.Aqua,
-                             display.DisplayCenterX - display.EarthRadius + 1,
-                             display.DisplayCenterY - display.EarthRadius + 1,
-                             2 * display.EarthRadius,
-                             2 * display.EarthRadius);
+        earth.Draw();
     }
 
-    public void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors)
+    public void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectorList)
     {
-        foreach (var pair in ToDisplayVectors(vectors))
-            DrawSegment(pair.Item1, pair.Item2);
+        foreach (var pair in vectorList.Select(display.ToDisplayScale))
+            segment.Draw(pair.Item1, pair.Item2);
     }
 
     public void DrawSun(double angle)
     {
-        DrawOrb(Brushes.Orange, angle);
+        orbSun.Draw(angle);
     }
 
     public void DrawMoon(double angle)
     {
-        DrawOrb(Brushes.Gray, angle);
-    }
-
-    private void DrawOrb(Brush brush, double angle)
-    {
-        var realPt = new Polar(angle, display.OrbShell).ToCartesian();
-        var pt     = ToDisplayPoint(realPt);
-        graphics.FillEllipse(brush, pt.X - 10, pt.Y - 10, 21, 21);
-    }
-
-    private void DrawSegment(Point p1, Point p2)
-    {
-        graphics.DrawLine(Pens.Red, p1, p2);
-        graphics.FillEllipse(Brushes.Green, p1.X - 2, p1.Y - 2, 5, 5);
-        graphics.FillEllipse(Brushes.Blue , p2.X - 2, p2.Y - 2, 5, 5);
-    }
-
-    private IEnumerable<Tuple<Point, Point>>
-    ToDisplayVectors(IEnumerable<Tuple<Cartesian, Cartesian>> vectors)
-    {
-        return vectors.Select(ToDisplayPoints);
-    }
-
-    private Tuple<Point, Point> ToDisplayPoints(Tuple<Cartesian, Cartesian> vector)
-    {
-        var realP1 = vector.Item1.Scale(display.EarthRadius / Constants.Earth.MEAN_RADIUS);
-        var realP2 = vector.Item2.Scale(display.VectorScale).Add(realP1);
-
-        return Tuple.Create(ToDisplayPoint(realP1), ToDisplayPoint(realP2));
-    }
-
-    private Point ToDisplayPoint(Cartesian realPt)
-    {
-        var displayPt = realPt.ToPoint();
-        displayPt.Offset(display.DisplayCenterX, display.DisplayCenterY);
-        displayPt.Y = display.Height - displayPt.Y;
-        return displayPt;
+        orbMoon.Draw(angle);
     }
 }
