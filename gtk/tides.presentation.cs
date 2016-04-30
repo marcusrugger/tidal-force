@@ -6,10 +6,10 @@ using System.Linq;
 
 class DrawObject
 {
-    protected Cairo.Context context;
+    protected Context context;
     protected DisplayParameters display;
 
-    public DrawObject(Cairo.Context context, DisplayParameters display)
+    public DrawObject(Context context, DisplayParameters display)
     {
         this.context = context;
         this.display = display;
@@ -21,7 +21,7 @@ class DrawOrb : DrawObject
 {
     Color color;
 
-    public DrawOrb(Cairo.Context context, DisplayParameters display, Color color)
+    public DrawOrb(Context context, DisplayParameters display, Color color)
     : base(context, display)
     {
         this.color = color;
@@ -42,10 +42,10 @@ class DrawOrb : DrawObject
 class DrawSegment : DrawObject
 {
     private Color colorLine = new Color(   0.0,   0.0,   0.0 );
-    private Color colorPt1  = new Color(   0.0,   0.0, 128.0 );
-    private Color colorPt2  = new Color( 128.0,   0.0,   0.0 );
+    private Color colorPt1  = new Color(   0.0,   0.0, 256.0 );
+    private Color colorPt2  = new Color( 256.0,   0.0,   0.0 );
 
-    public DrawSegment(Cairo.Context context, DisplayParameters display)
+    public DrawSegment(Context context, DisplayParameters display)
     : base(context, display)
     {}
     
@@ -87,7 +87,7 @@ class DrawSegment : DrawObject
 
 class DrawEarth : DrawObject
 {
-    public DrawEarth(Cairo.Context context, DisplayParameters display)
+    public DrawEarth(Context context, DisplayParameters display)
     : base(context, display)
     {}
 
@@ -104,6 +104,9 @@ class DrawEarth : DrawObject
 class TidesPresenter : ITidesPresenter
 {
     DisplayParameters display;
+    
+    Color colorSun  = new Color(1.0, 0.6, 0.1);
+    Color colorMoon = new Color(0.5, 0.5, 0.5);
 
     DrawOrb orbMoon;
     DrawOrb orbSun;
@@ -111,17 +114,17 @@ class TidesPresenter : ITidesPresenter
     DrawEarth earth;
     
 
-    public static TidesPresenter Create(Cairo.Context context, DisplayParameters display)
+    public static TidesPresenter Create(Context context, DisplayParameters display)
     {
         return new TidesPresenter(context, display);
     }
 
-    private TidesPresenter(Cairo.Context context, DisplayParameters display)
+    private TidesPresenter(Context context, DisplayParameters display)
     {
         this.display = display;
 
-        orbMoon = new DrawOrb(context, display, new Color(0.5, 0.5, 0.5));
-        orbSun  = new DrawOrb(context, display, new Color(1.0, 0.6, 0.1));
+        orbMoon = new DrawOrb(context, display, colorMoon);
+        orbSun  = new DrawOrb(context, display, colorSun);
         segment = new DrawSegment(context, display);
         earth   = new DrawEarth(context, display);
     }
