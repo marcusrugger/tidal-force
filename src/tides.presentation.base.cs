@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
+using VectorList = System.Collections.Generic.IEnumerable<System.Tuple<Cartesian, Cartesian>>;
+
 
 public interface ITidesPresenter
 {
     void DrawEarth();
-    void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors);
+    void Draw(VectorList vectors);
     void DrawSun(double angle);
     void DrawMoon(double angle);
 }
@@ -71,9 +73,8 @@ public class DisplayParameters
 
     public Tuple<Cartesian, Cartesian> ToDisplayScale(Tuple<Cartesian, Cartesian> vector)
     {
-        var realP1 = vector.Item1.Scale(EarthRadius / Constants.Earth.MEAN_RADIUS);
-        var realP2 = vector.Item2.Scale(VectorScale).Add(realP1);
-
-        return Tuple.Create(realP1, realP2);
+        var p1 = vector.Item1.Scale(EarthRadius / Constants.Earth.MEAN_RADIUS);
+        var p2 = vector.Item2.Scale(VectorScale).Add(p1);
+        return Tuple.Create(p1, p2);
     }
 }

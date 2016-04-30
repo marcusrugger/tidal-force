@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using VectorList = System.Collections.Generic.IEnumerable<System.Tuple<Cartesian, Cartesian>>;
+
 
 class DrawObject
 {
@@ -134,7 +136,7 @@ class TidesPresenter : ITidesPresenter
         earth.Draw();
     }
 
-    public void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectorList)
+    public void Draw(VectorList vectorList)
     {
         foreach (var pair in vectorList.Select(display.ToDisplayScale))
             segment.Draw(pair.Item1, pair.Item2);
