@@ -4,54 +4,62 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-class TidesPresenter : ITidesPresenter
+class Point
 {
-    Cairo.Context context;
-    DisplayParameters display;
+    public int x;
+    public int y;
 
-    public static TidesPresenter Create(Cairo.Context context, DisplayParameters display)
+    public Point(int x, int y)
     {
-        return new TidesPresenter(context, display);
+        this.x = x;
+        this.y = y;
     }
+}
 
-    private TidesPresenter(Cairo.Context context, DisplayParameters display)
+
+class DrawObject
+{
+    protected Cairo.Context context;
+    protected DisplayParameters display;
+
+    public DrawObject(Cairo.Context context, DisplayParameters display)
     {
         this.context = context;
         this.display = display;
     }
+}
 
-    public void DrawEarth()
+
+class DrawOrb : DrawObject
+{
+    Color color;
+
+    public DrawOrb(Cairo.Context context, DisplayParameters display, Color color)
+    : base(context, display)
     {
+        this.color = color;
+    }
+
+    public void Draw(double angle)
+    {
+        var realPt = new Polar(angle, display.OrbShell).ToCartesian();
+
         context.LineWidth = 1.0;
-        context.SetSourceRGB(0.0, 0.0, 0.0);
-
-        context.Arc(display.DisplayCenterX, display.DisplayCenterY, display.EarthRadius, 0, 2*Math.PI);
-
-        context.SetSourceRGB(0.0, 1.0, 1.0);
+        context.SetSourceColor(color);
+        context.Arc( display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y), 10, 0, 2 * Math.PI );
         context.Fill();
     }
+}
 
-    public void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors)
+
+class DrawSegment : DrawObject
+{
+    public DrawSegment(Cairo.Context context, DisplayParameters display)
+    : base(context, display)
+    {}
+
+    public void Draw(Point p1, Point p2)
     {
-        foreach (var pair in ToDisplayVectors(vectors))
-            DrawSegment(pair.Item1, pair.Item2);
-    }
-
-    public void DrawSun(double angle)
-    {
-        DrawOrb(angle, 1.0, 0.6, 0.1);
-    }
-
-    public void DrawMoon(double angle)
-    {
-        DrawOrb(angle, 0.5, 0.5, 0.5);
-    }
-
-    private void DrawSegment(Point p1, Point p2)
-    {
-        context.SetSourceRGB(0.0, 128.0, 0.0);
-        context.Arc(p1.x, p1.y, 2, 0, 2*Math.PI);
-
         context.LineWidth = 1.0;
         context.SetSourceRGB(0.0, 0.0, 0.0);
 
@@ -60,22 +68,35 @@ class TidesPresenter : ITidesPresenter
 
         context.Stroke();
 
-        context.SetSourceRGB(128.0, 0.0, 128.0);
+        context.LineWidth = 1.0;
+        context.SetSourceRGB(0.0, 0.0, 128.0);
+        context.Arc(p1.x, p1.y, 2, 0, 2*Math.PI);
+
+        context.Stroke();
+
+        context.LineWidth = 1.0;
+        context.SetSourceRGB(128.0, 0.0, 0.0);
         context.Arc(p2.x, p2.y, 2, 0, 2*Math.PI);
 
         context.Stroke();
     }
+}
 
-    private void DrawOrb(double angle, double red, double green, double blue)
+
+class DrawVectors : DrawObject
+{
+    DrawSegment segment;
+
+    public DrawVectors(Cairo.Context context, DisplayParameters display)
+    : base(context, display)
     {
-        var realPt = new Polar(angle, display.OrbShell).ToCartesian();
+        segment = new DrawSegment(context, display);
+    }
 
-        context.LineWidth = 1.0;
-        context.SetSourceRGB(0.0, 0.0, 0.0);
-        context.Arc( display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y), 10, 0, 2 * Math.PI );
-
-        context.SetSourceRGB(red, green, blue);
-        context.Fill();
+    public void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectors)
+    {
+        foreach (var pair in ToDisplayVectors(vectors))
+            segment.Draw(pair.Item1, pair.Item2);
     }
 
     private IEnumerable<Tuple<Point, Point>>
@@ -92,20 +113,69 @@ class TidesPresenter : ITidesPresenter
         return Tuple.Create(ToDisplayPoint(realP1), ToDisplayPoint(realP2));
     }
 
-    private Point ToDisplayPoint(Cartesian realPt)
+    protected Point ToDisplayPoint(Cartesian realPt)
     {
         return new Point(display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y));
     }
+}
 
-    class Point
+
+class DrawEarth : DrawObject
+{
+    public DrawEarth(Cairo.Context context, DisplayParameters display)
+    : base(context, display)
+    {}
+
+    public void Draw()
     {
-        public int x;
-        public int y;
+        context.LineWidth = 1.0;
+        context.SetSourceRGB(0.0, 0.0, 0.0);
 
-        public Point(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
+        context.Arc(display.DisplayCenterX, display.DisplayCenterY, display.EarthRadius, 0, 2*Math.PI);
+
+        context.SetSourceRGB(0.0, 1.0, 1.0);
+        context.Fill();
+    }
+}
+
+
+class TidesPresenter : ITidesPresenter
+{
+    DrawOrb orbMoon;
+    DrawOrb orbSun;
+    DrawVectors vectors;
+    DrawEarth earth;
+
+    public static TidesPresenter Create(Cairo.Context context, DisplayParameters display)
+    {
+        return new TidesPresenter(context, display);
+    }
+
+    private TidesPresenter(Cairo.Context context, DisplayParameters display)
+    {
+        orbMoon = new DrawOrb(context, display, new Color(0.5, 0.5, 0.5));
+        orbSun  = new DrawOrb(context, display, new Color(1.0, 0.6, 0.1));
+        vectors = new DrawVectors(context, display);
+        earth   = new DrawEarth(context, display);
+    }
+
+    public void DrawEarth()
+    {
+        earth.Draw();
+    }
+
+    public void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectorList)
+    {
+        vectors.Draw(vectorList);
+    }
+
+    public void DrawSun(double angle)
+    {
+        orbSun.Draw(angle);
+    }
+
+    public void DrawMoon(double angle)
+    {
+        orbMoon.Draw(angle);
     }
 }
