@@ -8,12 +8,12 @@ class TidesPresenter : TidesBasePresenter, ITidesPresenter
 {
     Cairo.Context context;
 
-    public static TidesPresenter Create(Cairo.Context context)
+    public static TidesPresenter Create(Cairo.Context context, int width, int height)
     {
-        return new TidesPresenter(context);
+        return new TidesPresenter(context, width, height);
     }
 
-    private TidesPresenter(Cairo.Context context) : base(1000, 1000)
+    private TidesPresenter(Cairo.Context context, int width, int height) : base(width, height)
     {
         this.context = context;
     }
@@ -25,7 +25,7 @@ class TidesPresenter : TidesBasePresenter, ITidesPresenter
 
         context.Arc(DISPLAY_CENTER_X, DISPLAY_CENTER_Y, EARTH_RADIUS, 0, 2*Math.PI);
 
-        context.SetSourceRGB(0.1, 0.4, 0.6);
+        context.SetSourceRGB(0.0, 1.0, 1.0);
         context.Fill();
     }
 
