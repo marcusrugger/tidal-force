@@ -14,6 +14,11 @@ class DrawObject
         this.context = context;
         this.display = display;
     }
+
+    protected PointD ToDisplayPoint(Cartesian realPt)
+    {
+        return new PointD( display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y) );
+    }
 }
 
 
@@ -30,10 +35,11 @@ class DrawOrb : DrawObject
     public void Draw(double angle)
     {
         var realPt = new Polar(angle, display.OrbShell).ToCartesian();
+        var pt     = ToDisplayPoint(realPt);
 
         context.LineWidth = 1.0;
         context.SetSourceColor(color);
-        context.Arc( display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y), 10, 0, 2 * Math.PI );
+        context.Arc( pt.X, pt.Y, 10, 0, 2 * Math.PI );
         context.Fill();
     }
 }
@@ -56,12 +62,12 @@ class DrawSegment : DrawObject
 
     private void Draw(PointD p1, PointD p2)
     {
-        DrawLine(colorLine, p1, p2);
+        DrawLine(p1, p2);
         DrawEndpoint(colorPt1, p1);
         DrawEndpoint(colorPt2, p2);
     }
     
-    private void DrawLine(Color color, PointD p1, PointD p2)
+    private void DrawLine(PointD p1, PointD p2)
     {
         context.LineWidth = 1.0;
         context.SetSourceColor(colorLine);
@@ -72,15 +78,9 @@ class DrawSegment : DrawObject
     
     private void DrawEndpoint(Color color, PointD p)
     {
-        context.LineWidth = 1.0;
         context.SetSourceColor(color);
         context.Arc(p.X, p.Y, 2, 0, 2*Math.PI);
-        context.Stroke();
-    }
-
-    private PointD ToDisplayPoint(Cartesian realPt)
-    {
-        return new PointD( display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y) );
+        context.Fill();
     }
 }
 
