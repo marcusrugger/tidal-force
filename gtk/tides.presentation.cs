@@ -41,6 +41,10 @@ class DrawOrb : DrawObject
 
 class DrawSegment : DrawObject
 {
+    private Color colorLine = new Color(   0.0,   0.0,   0.0 );
+    private Color colorPt1  = new Color(   0.0,   0.0, 128.0 );
+    private Color colorPt2  = new Color( 128.0,   0.0,   0.0 );
+
     public DrawSegment(Cairo.Context context, DisplayParameters display)
     : base(context, display)
     {}
@@ -52,24 +56,25 @@ class DrawSegment : DrawObject
 
     private void Draw(PointD p1, PointD p2)
     {
+        DrawLine(colorLine, p1, p2);
+        DrawEndpoint(colorPt1, p1);
+        DrawEndpoint(colorPt2, p2);
+    }
+    
+    private void DrawLine(Color color, PointD p1, PointD p2)
+    {
         context.LineWidth = 1.0;
-        context.SetSourceRGB(0.0, 0.0, 0.0);
-
+        context.SetSourceColor(colorLine);
         context.MoveTo(p1);
         context.LineTo(p2);
-
         context.Stroke();
-
+    }
+    
+    private void DrawEndpoint(Color color, PointD p)
+    {
         context.LineWidth = 1.0;
-        context.SetSourceRGB(0.0, 0.0, 128.0);
-        context.Arc(p1.X, p1.Y, 2, 0, 2*Math.PI);
-
-        context.Stroke();
-
-        context.LineWidth = 1.0;
-        context.SetSourceRGB(128.0, 0.0, 0.0);
-        context.Arc(p2.X, p2.Y, 2, 0, 2*Math.PI);
-
+        context.SetSourceColor(color);
+        context.Arc(p.X, p.Y, 2, 0, 2*Math.PI);
         context.Stroke();
     }
 
@@ -96,34 +101,15 @@ class DrawEarth : DrawObject
 }
 
 
-class VectorTransformer
+class TidesPresenter : ITidesPresenter
 {
     DisplayParameters display;
 
-    public VectorTransformer(DisplayParameters display)
-    {
-        this.display = display;
-    }
-
-    public Tuple<Cartesian, Cartesian> ToDisplayScale(Tuple<Cartesian, Cartesian> vector)
-    {
-        var realP1 = vector.Item1.Scale(display.EarthRadius / Constants.Earth.MEAN_RADIUS);
-        var realP2 = vector.Item2.Scale(display.VectorScale).Add(realP1);
-
-        return Tuple.Create(realP1, realP2);
-    }
-}
-
-
-class TidesPresenter : ITidesPresenter
-{
     DrawOrb orbMoon;
     DrawOrb orbSun;
     DrawSegment segment;
     DrawEarth earth;
     
-    VectorTransformer transformVector;
-
 
     public static TidesPresenter Create(Cairo.Context context, DisplayParameters display)
     {
@@ -132,12 +118,12 @@ class TidesPresenter : ITidesPresenter
 
     private TidesPresenter(Cairo.Context context, DisplayParameters display)
     {
+        this.display = display;
+
         orbMoon = new DrawOrb(context, display, new Color(0.5, 0.5, 0.5));
         orbSun  = new DrawOrb(context, display, new Color(1.0, 0.6, 0.1));
         segment = new DrawSegment(context, display);
         earth   = new DrawEarth(context, display);
-        
-        transformVector = new VectorTransformer(display);
     }
 
     public void DrawEarth()
@@ -147,7 +133,7 @@ class TidesPresenter : ITidesPresenter
 
     public void Draw(IEnumerable<Tuple<Cartesian, Cartesian>> vectorList)
     {
-        foreach (var pair in vectorList.Select(transformVector.ToDisplayScale))
+        foreach (var pair in vectorList.Select(display.ToDisplayScale))
             segment.Draw(pair.Item1, pair.Item2);
     }
 

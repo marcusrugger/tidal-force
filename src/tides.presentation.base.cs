@@ -67,4 +67,13 @@ public class DisplayParameters
     {
         return Height - (DisplayCenterY + (int) (y + 0.5));
     }
+
+
+    public Tuple<Cartesian, Cartesian> ToDisplayScale(Tuple<Cartesian, Cartesian> vector)
+    {
+        var realP1 = vector.Item1.Scale(EarthRadius / Constants.Earth.MEAN_RADIUS);
+        var realP2 = vector.Item2.Scale(VectorScale).Add(realP1);
+
+        return Tuple.Create(realP1, realP2);
+    }
 }
