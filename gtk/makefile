@@ -1,7 +1,6 @@
 
 SOURCE = 	tides.cs				\
-			tides.window.cs			\
-			tides.presentation.cs
+			tides.window.cs
 
 
 ROOT_DIR	= ..

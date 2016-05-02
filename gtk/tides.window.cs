@@ -1,14 +1,20 @@
 using Gtk;
 using System;
 
+using CreateController = System.Func<ITidesWindow, ITidesController>;
+using CreatePresenter  = System.Func<Cairo.Context, DisplayParameters, ITidesPresenter>;
+
 
 class TidesWindow : Window, ITidesWindow
 {
     ITidesController controller;
+    CreatePresenter fnCreatePresenter;
 
-    public TidesWindow(Func<ITidesWindow, ITidesController> fnCreateController) : base("Tidal Forces")
+    public TidesWindow(CreateController fnCreateController, CreatePresenter fnCreatePresenter)
+    : base("Tidal Forces")
     {
         this.controller = fnCreateController(this);
+        this.fnCreatePresenter = fnCreatePresenter;
 
         SetDefaultSize(1000, 1000);
 
@@ -50,10 +56,7 @@ class TidesWindow : Window, ITidesWindow
     protected override bool OnDrawn(Cairo.Context context)
     {
         bool result = base.OnDrawn(context);
-        var flatlandContext = Flatland.CairoGraphics.Context.Create(context);
-        var flatlandCanvas  = Flatland.Common.Canvas.Create(flatlandContext);
-        var tidesPresenter  = TidesFlatlandPresenter.Create(flatlandCanvas, DisplayParams);
-        controller.Draw(tidesPresenter);
+        controller.Draw( fnCreatePresenter(context, DisplayParams) );
         return result;
     }
     
