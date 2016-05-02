@@ -1,6 +1,7 @@
 
 SOURCE = 	tides.controller.cs				\
 			tides.presentation.base.cs		\
+			tides.presentation.flatland.cs	\
 			animator.base.cs				\
 			animator.moon.cs				\
 			animator.sun.cs					\
@@ -30,6 +31,11 @@ TARGET		= $(BIN_DIR)/$(DLL_NAME)
 
 PACKAGES	= -pkg:dotnet
 
+FLATLAND_BIN		= ../lib/flatland/bin
+FLATLAND_INTERFACES	= flatland.interfaces.dll
+FLATLAND_COMMON		= flatland.common.dll
+FLATLAND_LIBRARIES	= -r:$(FLATLAND_BIN)/$(FLATLAND_INTERFACES) -r:$(FLATLAND_BIN)/$(FLATLAND_COMMON)
+
 
 all:		$(TARGET)	\
 			runtests
@@ -46,7 +52,7 @@ runtests:	tests.dll
 
 
 $(TARGET):	$(SOURCE)
-	mcs -out:$@ -target:library $(PACKAGES) $^
+	mcs -out:$@ -target:library $(PACKAGES) $(FLATLAND_LIBRARIES) $^
 
 
 tests.dll:	test.polar.cs				\
@@ -56,4 +62,4 @@ tests.dll:	test.polar.cs				\
 			test.forcevectors.cs		\
 			test.algorithms.cs			\
 			$(SOURCE)
-	mcs -out:$@ -target:library $(PACKAGES) -r:$(NUNIT_FRAMEWORK) $^
+	mcs -out:$@ -target:library $(PACKAGES) $(FLATLAND_LIBRARIES) -r:$(NUNIT_FRAMEWORK) $^

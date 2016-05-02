@@ -50,7 +50,10 @@ class TidesWindow : Window, ITidesWindow
     protected override bool OnDrawn(Cairo.Context context)
     {
         bool result = base.OnDrawn(context);
-        controller.Draw( TidesPresenter.Create(context, DisplayParams) );
+        var flatlandContext = Flatland.CairoGraphics.Context.Create(context);
+        var flatlandCanvas  = Flatland.Common.Canvas.Create(flatlandContext);
+        var tidesPresenter  = TidesFlatlandPresenter.Create(flatlandCanvas, DisplayParams);
+        controller.Draw(tidesPresenter);
         return result;
     }
     
