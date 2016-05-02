@@ -2,19 +2,24 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
+using CreateController = System.Func<ITidesWindow, ITidesController>;
+using CreatePresenter = System.Func<System.Drawing.Graphics, DisplayParameters, ITidesPresenter>;
+
 
 class TidesWindow : Form, ITidesWindow
 {
     private ITidesController controller;
+    private CreatePresenter fnCreatePresenter;
 
     private const int DISPLAY_WIDTH        = 1000;
     private const int DISPLAY_HEIGHT       = 1000;
 
     private Timer timer;
 
-    public TidesWindow(Func<ITidesWindow, ITidesController> fnCreateController)
+    public TidesWindow(CreateController fnCreateController, CreatePresenter fnCreatePresenter)
     {
-        controller = fnCreateController(this);
+        this.controller = fnCreateController(this);
+        this.fnCreatePresenter = fnCreatePresenter;
 
         SetupForm();
         CreateTimer();
@@ -50,7 +55,7 @@ class TidesWindow : Form, ITidesWindow
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
-        var presenter = TidesPresenter.Create(e.Graphics, new DisplayParameters(Size.Width, Size.Height));
+        var presenter = fnCreatePresenter(e.Graphics, new DisplayParameters(Size.Width, Size.Height));
         controller.Draw(presenter);
     }
 
