@@ -6,13 +6,10 @@ SOURCE = 	tides.controller.cs				\
 			animator.moon.cs				\
 			animator.sun.cs					\
 			animator.sunmoon.cs				\
-			algorithms.cs					\
 			tidalvectors.cs					\
 			forcepoints.cs					\
 			forcevectors.cs					\
 			constants.cs					\
-			cartesian.cs					\
-			polar.cs						\
 			gravitationalforce.cs
 
 
@@ -55,11 +52,8 @@ $(TARGET):	$(SOURCE)
 	mcs -out:$@ -target:library $(PACKAGES) $(FLATLAND_LIBRARIES) $^
 
 
-tests.dll:	test.polar.cs				\
-			test.cartesian.cs			\
-			test.gravitationalforce.cs	\
+tests.dll:	test.gravitationalforce.cs	\
 			test.forcepoints.cs			\
 			test.forcevectors.cs		\
-			test.algorithms.cs			\
 			$(SOURCE)
 	mcs -out:$@ -target:library $(PACKAGES) $(FLATLAND_LIBRARIES) -r:$(NUNIT_FRAMEWORK) $^

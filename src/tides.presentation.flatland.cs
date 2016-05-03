@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Flatland;
 
-using VectorList = System.Collections.Generic.IEnumerable<System.Tuple<Cartesian, Cartesian>>;
+using VectorList = System.Collections.Generic.IEnumerable<System.Tuple<Flatland.Cartesian, Flatland.Cartesian>>;
 
 
 class DrawObject
@@ -18,7 +19,7 @@ class DrawObject
 
     protected Flatland.Cartesian ToDisplayPoint(Cartesian realPt)
     {
-        return new Flatland.Cartesian( display.ToDisplayX(realPt.x), display.ToDisplayY(realPt.y) );
+        return new Flatland.Cartesian( display.ToDisplayX(realPt.X), display.ToDisplayY(realPt.Y) );
     }
 }
 
@@ -58,10 +59,10 @@ class DrawSegment : DrawObject
     
     public void Draw(Cartesian p1, Cartesian p2)
     {
-        Draw( ToDisplayPoint(p1), ToDisplayPoint(p2) );
+        InternalDraw( ToDisplayPoint(p1), ToDisplayPoint(p2) );
     }
 
-    private void Draw(Flatland.Cartesian p1, Flatland.Cartesian p2)
+    private void InternalDraw(Cartesian p1, Cartesian p2)
     {
         lineSegment.Line(p1, p2);
         endcapPt1.Circle(p1, 2.0);

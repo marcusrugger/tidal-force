@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Flatland;
 
-using VectorList = System.Collections.Generic.IEnumerable<System.Tuple<Cartesian, Cartesian>>;
+using VectorList = System.Collections.Generic.IEnumerable<System.Tuple<Flatland.Cartesian, Flatland.Cartesian>>;
 
 
 public interface ITidesPresenter
@@ -74,7 +75,7 @@ public class DisplayParameters
     public Tuple<Cartesian, Cartesian> ToDisplayScale(Tuple<Cartesian, Cartesian> vector)
     {
         var p1 = vector.Item1.Scale(EarthRadius / Constants.Earth.MEAN_RADIUS);
-        var p2 = vector.Item2.Scale(VectorScale).Add(p1);
+        var p2 = vector.Item2.Scale(VectorScale).Offset(p1);
         return Tuple.Create(p1, p2);
     }
 }

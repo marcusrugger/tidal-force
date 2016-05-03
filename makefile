@@ -6,8 +6,8 @@ GTKSHARP	= gtk
 FLATLAND	= lib/flatland
 
 
-all:	$(BIN_DIR)
-	$(MAKE) -C $(FLATLAND)
+all:	$(BIN_DIR)	\
+		flatland
 	$(MAKE) -C $(TIDES)
 	$(MAKE) -C $(WINFORMS)
 	$(MAKE) -C $(GTKSHARP)
@@ -18,6 +18,12 @@ clean:
 	$(MAKE) -C $(TIDES) clean
 	$(MAKE) -C $(WINFORMS) clean
 	$(MAKE) -C $(GTKSHARP) clean
+	-rm -r -f $(BIN_DIR)
+
+
+flatland:
+	$(MAKE) -C $(FLATLAND)
+	cp $(FLATLAND)/bin/flatland.*.dll $(BIN_DIR)
 
 
 makewinforms:

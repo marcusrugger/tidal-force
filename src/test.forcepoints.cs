@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Flatland;
 
 
 [TestFixture]
@@ -25,8 +26,8 @@ class ForcePointsTest
         var zip = Enumerable.Zip(pts, expected, (p, e) => Tuple.Create(p, e));
         foreach (var z in zip)
         {
-            Assert.That(Math.Abs(z.Item1.x - z.Item2.x), Is.LessThan(0.000001));
-            Assert.That(Math.Abs(z.Item1.y - z.Item2.y), Is.LessThan(0.000001));
+            Assert.That(Math.Abs(z.Item1.X - z.Item2.X), Is.LessThan(0.000001));
+            Assert.That(Math.Abs(z.Item1.Y - z.Item2.Y), Is.LessThan(0.000001));
         }
     }
 }

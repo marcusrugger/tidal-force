@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Flatland;
 
 
 [TestFixture]
@@ -50,7 +51,7 @@ class ForceVectorsTest
 
     private void ComparePoint(Cartesian pt, Cartesian expected)
     {
-        Assert.That(Math.Abs(pt.x - expected.x), Is.LessThan(1e-6));
-        Assert.That(Math.Abs(pt.y - expected.y), Is.LessThan(1e-6));
+        Assert.That(Math.Abs(pt.X - expected.X), Is.LessThan(1e-6));
+        Assert.That(Math.Abs(pt.Y - expected.Y), Is.LessThan(1e-6));
     }
 }
