@@ -90,7 +90,7 @@ public class TidesFlatlandPresenter : ITidesPresenter
 {
     DisplayParameters display;
     
-    Flatland.Color colorSun  = new Flatland.ColorRGB(255, 153, 26);
+    Flatland.Color colorSun  = new Flatland.ColorB(253, 184, 19);
     Flatland.Color colorMoon = Flatland.Colors.Gray;
 
     DrawOrb orbMoon;
