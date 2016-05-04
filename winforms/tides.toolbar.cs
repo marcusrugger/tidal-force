@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 class TidesToolbar : ToolBar
 {
-    private ITidesController controller;
+    readonly ITidesController controller;
 
     enum ToolbarButtons
     {

@@ -8,13 +8,13 @@ using CreatePresenter = System.Func<System.Drawing.Graphics, Flatland.Transforme
 
 class TidesWindow : Form, ITidesWindow
 {
-    private ITidesController controller;
-    private CreatePresenter fnCreatePresenter;
+    readonly ITidesController controller;
+    readonly CreatePresenter fnCreatePresenter;
 
-    private const int DISPLAY_WIDTH        = 1000;
-    private const int DISPLAY_HEIGHT       = 1000;
+    const int DISPLAY_WIDTH        = 1000;
+    const int DISPLAY_HEIGHT       = 1000;
 
-    private Timer timer;
+    readonly Timer timer;
 
     public TidesWindow(CreateController fnCreateController, CreatePresenter fnCreatePresenter)
     {
@@ -22,7 +22,7 @@ class TidesWindow : Form, ITidesWindow
         this.fnCreatePresenter = fnCreatePresenter;
 
         SetupForm();
-        CreateTimer();
+        timer = CreateTimer();
         Controls.Add( new TidesToolbar(controller) );
     }
 
@@ -34,12 +34,13 @@ class TidesWindow : Form, ITidesWindow
         this.DoubleBuffered  = true;
     }
 
-    private void CreateTimer()
+    private Timer CreateTimer()
     {
-        timer = new Timer();
+        Timer timer = new Timer();
         timer.Enabled   = true;
         timer.Interval  = 33;
         timer.Tick     += (sender, e) => controller.NextFrame();
+        return timer;
     }
 
     protected override void Dispose(bool disposing)

@@ -19,8 +19,8 @@ class DrawObject
 
 class DrawOrb : DrawObject
 {
-    readonly double ORB_SHELL = 1.50 * Constants.Earth.MEAN_RADIUS;
-    readonly double ORB_SIZE  = 0.10 * Constants.Earth.MEAN_RADIUS;
+    static readonly double ORB_SHELL = 1.50 * Constants.Earth.MEAN_RADIUS;
+    static readonly double ORB_SIZE  = 0.10 * Constants.Earth.MEAN_RADIUS;
 
     readonly Flatland.Wireframe wireframe;
 
@@ -40,7 +40,7 @@ class DrawOrb : DrawObject
 
 class DrawSegment : DrawObject
 {
-    readonly double VECTOR_SCALE = 0.20 * Constants.Earth.MEAN_RADIUS;
+    static readonly double VECTOR_SCALE = 0.20 * Constants.Earth.MEAN_RADIUS;
 
     readonly Flatland.Wireframe lineSegment;
     readonly Flatland.Wireframe endcapPt1;
@@ -87,13 +87,13 @@ class DrawEarth : DrawObject
 
 public class TidesFlatlandPresenter : ITidesPresenter
 {
-    Flatland.Color colorSun  = new Flatland.ColorB(253, 184, 19);
-    Flatland.Color colorMoon = Flatland.Colors.Gray;
+    static readonly Flatland.Color colorSun  = new Flatland.ColorB(253, 184, 19);
+    static readonly Flatland.Color colorMoon = Flatland.Colors.Gray;
 
-    DrawOrb orbMoon;
-    DrawOrb orbSun;
-    DrawSegment segment;
-    DrawEarth earth;
+    readonly DrawOrb orbMoon;
+    readonly DrawOrb orbSun;
+    readonly DrawSegment segment;
+    readonly DrawEarth earth;
     
 
     public static TidesFlatlandPresenter Create(Flatland.Canvas canvas)

@@ -7,8 +7,8 @@ using CreatePresenter  = System.Func<Cairo.Context, Flatland.Transformer, ITides
 
 class TidesWindow : Window, ITidesWindow
 {
-    ITidesController controller;
-    CreatePresenter fnCreatePresenter;
+    readonly ITidesController controller;
+    readonly CreatePresenter fnCreatePresenter;
 
     public TidesWindow(CreateController fnCreateController, CreatePresenter fnCreatePresenter)
     : base("Tidal Forces")

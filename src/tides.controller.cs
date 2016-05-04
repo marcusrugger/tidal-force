@@ -23,7 +23,7 @@ public interface ITidesController
 
 public class TidesController : ITidesController
 {
-    private ITidesWindow window;
+    private readonly ITidesWindow window;
     private IAnimator animator;
     private bool isPaused;
     private bool isFast;

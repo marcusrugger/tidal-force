@@ -3,7 +3,7 @@ using System;
 public class GravitationalForce
 {
     private const double G = 6.67408e-11;
-    private double n;
+    private readonly double n;
 
     public GravitationalForce(double M, double m)
     {

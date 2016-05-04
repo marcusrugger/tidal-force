@@ -6,14 +6,14 @@ using Flatland;
 
 class TidalVectors
 {
-    protected static Cartesian positionEarth    = new Cartesian(0.0, 0.0);
-    protected static GravitationalForce solarG  = new GravitationalForce(Constants.Sun.MASS);
-    protected static GravitationalForce lunarG  = new GravitationalForce(Constants.Moon.MASS);
+    protected static readonly Cartesian positionEarth    = new Cartesian(0.0, 0.0);
+    protected static readonly GravitationalForce solarG  = new GravitationalForce(Constants.Sun.MASS);
+    protected static readonly GravitationalForce lunarG  = new GravitationalForce(Constants.Moon.MASS);
 
-    private Func<Cartesian, ForceVectors> vectorsLunar = p => new ForceVectors(lunarG.compute, p, positionEarth, 1e6);
-    private Func<Cartesian, ForceVectors> vectorsSolar = p => new ForceVectors(solarG.compute, p, positionEarth, 1e6);
+    readonly Func<Cartesian, ForceVectors> vectorsLunar = p => new ForceVectors(lunarG.compute, p, positionEarth, 1e6);
+    readonly Func<Cartesian, ForceVectors> vectorsSolar = p => new ForceVectors(solarG.compute, p, positionEarth, 1e6);
 
-    protected ForcePoints pointGenerator;
+    protected readonly ForcePoints pointGenerator;
 
     public TidalVectors(int vectorCount)
     {

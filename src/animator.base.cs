@@ -17,7 +17,7 @@ interface IAnimator
 abstract class Animator : IAnimator
 {
     protected int frame_step;
-    protected TidalVectors vectorGenerator;
+    protected readonly TidalVectors vectorGenerator;
 
     public Animator(int vectorCount = 32)
     {
