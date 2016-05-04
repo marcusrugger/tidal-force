@@ -2,7 +2,7 @@ using Gtk;
 using System;
 
 using CreateController = System.Func<ITidesWindow, ITidesController>;
-using CreatePresenter  = System.Func<Cairo.Context, DisplayParameters, ITidesPresenter>;
+using CreatePresenter  = System.Func<Cairo.Context, Flatland.Transformer, ITidesPresenter>;
 
 
 class TidesWindow : Window, ITidesWindow
@@ -56,19 +56,23 @@ class TidesWindow : Window, ITidesWindow
     protected override bool OnDrawn(Cairo.Context context)
     {
         bool result = base.OnDrawn(context);
-        controller.Draw( fnCreatePresenter(context, DisplayParams) );
+        controller.Draw( fnCreatePresenter(context, Transformer) );
         return result;
     }
     
-    private DisplayParameters DisplayParams
+    private Flatland.Transformer Transformer
     {
         get
         {
             int width  = 0;
             int height = 0;
             GetSize(out width, out height);
+            double display_earth = 0.3 * (double) Math.Min(width, height);
 
-            return new DisplayParameters(width, height);
+            return Flatland.Transformer
+                           .Create()
+                           .SetTranslation( new Flatland.Cartesian(width/2, height/2) )
+                           .SetScale( new Flatland.Cartesian(display_earth/Constants.Earth.MEAN_RADIUS, -display_earth/Constants.Earth.MEAN_RADIUS) );
         }
     }
 

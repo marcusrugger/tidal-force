@@ -8,11 +8,11 @@ public class Tides
     {
         Application.Init();
 
-        Func<Cairo.Context, DisplayParameters, ITidesPresenter> fnCreatePresenter = (c, p) =>
+        Func<Cairo.Context, Flatland.Transformer, ITidesPresenter> fnCreatePresenter = (c, t) =>
         {
-            var flatlandContext = Flatland.CairoGraphics.Context.Create(c);
+            var flatlandContext = Flatland.CairoGraphics.Context.Create(c, t);
             var flatlandCanvas  = Flatland.Common.Canvas.Create(flatlandContext);
-            return TidesFlatlandPresenter.Create(flatlandCanvas, p);
+            return TidesFlatlandPresenter.Create(flatlandCanvas);
         };
 
         var window = new TidesWindow(TidesController.Create, fnCreatePresenter);

@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using CreateController = System.Func<ITidesWindow, ITidesController>;
-using CreatePresenter = System.Func<System.Drawing.Graphics, DisplayParameters, ITidesPresenter>;
+using CreatePresenter = System.Func<System.Drawing.Graphics, Flatland.Transformer, ITidesPresenter>;
 
 
 class TidesWindow : Form, ITidesWindow
@@ -55,8 +55,21 @@ class TidesWindow : Form, ITidesWindow
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
-        var presenter = fnCreatePresenter(e.Graphics, new DisplayParameters(Size.Width, Size.Height));
+        var presenter = fnCreatePresenter(e.Graphics, Transformer);
         controller.Draw(presenter);
+    }
+    
+    private Flatland.Transformer Transformer
+    {
+        get
+        {
+            double display_earth = 0.3 * (double) Math.Min(Size.Width, Size.Height);
+
+            return Flatland.Transformer
+                           .Create()
+                           .SetTranslation( new Flatland.Cartesian(Size.Width/2, Size.Height/2) )
+                           .SetScale( new Flatland.Cartesian(display_earth/Constants.Earth.MEAN_RADIUS, -display_earth/Constants.Earth.MEAN_RADIUS) );
+        }
     }
 
     public void Redraw()

@@ -1,17 +1,17 @@
 using System;
 using System.Windows.Forms;
 
-using CreatePresenter = System.Func<System.Drawing.Graphics, DisplayParameters, ITidesPresenter>;
+using CreatePresenter = System.Func<System.Drawing.Graphics, Flatland.Transformer, ITidesPresenter>;
 
 public class Tides
 {
     static public void Main ()
     {
-        CreatePresenter fnCreatePresenter = (c, p) =>
+        CreatePresenter fnCreatePresenter = (c, t) =>
         {
-            var flatlandContext = Flatland.GdiPlus.Context.Create(c);
+            var flatlandContext = Flatland.GdiPlus.Context.Create(c, t);
             var flatlandCanvas  = Flatland.Common.Canvas.Create(flatlandContext);
-            return TidesFlatlandPresenter.Create(flatlandCanvas, p);
+            return TidesFlatlandPresenter.Create(flatlandCanvas);
         };
 
         Application.Run( new TidesWindow(TidesController.Create, fnCreatePresenter) );
