@@ -42,30 +42,36 @@ class DrawSegment : DrawObject
 {
     static readonly double VECTOR_SCALE = 0.20 * Constants.Earth.MEAN_RADIUS;
 
-    readonly Flatland.Wireframe lineSegment;
+    readonly Flatland.Turtle    lineSegment;
     readonly Flatland.Wireframe endcapPt1;
-    readonly Flatland.Wireframe endcapPt2;
 
     public DrawSegment(Flatland.Canvas canvas)
     : base(canvas)
     {
-        lineSegment = canvas.Wireframe().SetLineColor(Flatland.Colors.Black);
+        lineSegment = canvas.Turtle()   .SetLineColor(Flatland.Colors.Black);
         endcapPt1   = canvas.Wireframe().SetLineColor(Flatland.Colors.Blue);
-        endcapPt2   = canvas.Wireframe().SetLineColor(Flatland.Colors.Red);
     }
 
     public void Draw(Tuple<Cartesian, Cartesian> vector)
     {
         var p1 = vector.Item1;
-        var p2 = vector.Item2.Scale(VECTOR_SCALE).Offset(p1);
+        var p2 = vector.Item2.Scale(VECTOR_SCALE).ToPolar();
         Draw(p1, p2);
     }
 
-    private void Draw(Cartesian p1, Cartesian p2)
+    private void Draw(Cartesian p1, Polar p2)
     {
-        lineSegment.Line(p1, p2);
         endcapPt1.Circle(p1, 200000.0);
-        endcapPt2.Circle(p2, 200000.0);
+        lineSegment.MoveTo(p1)
+                   .TurnTo(p2.A)
+                   .Line(p2.R)
+                   .SetLineColor(Flatland.Colors.Red)
+                   .Turn( Algorithms.ToRadians(150.0) )
+                   .Line(400000.0)
+                   .Turn( Algorithms.ToRadians(120.0) )
+                   .Line(400000.0)
+                   .Turn( Algorithms.ToRadians(120.0) )
+                   .Line(400000.0);
     }
 }
 
