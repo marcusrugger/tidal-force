@@ -40,7 +40,9 @@ class DrawOrb : DrawObject
 
 class DrawSegment : DrawObject
 {
-    static readonly double VECTOR_SCALE = 0.20 * Constants.Earth.MEAN_RADIUS;
+    static readonly double VECTOR_SCALE     = 0.20 * Constants.Earth.MEAN_RADIUS;
+    static readonly double ENDCAP_RADIUS    = 0.03 * Constants.Earth.MEAN_RADIUS;
+    static readonly double ARROWHEAD_LENGTH = 2 * ENDCAP_RADIUS;
 
     readonly Flatland.Turtle    lineSegment;
     readonly Flatland.Wireframe endcapPt1;
@@ -61,17 +63,24 @@ class DrawSegment : DrawObject
 
     private void Draw(Cartesian p1, Polar p2)
     {
-        endcapPt1.Circle(p1, 200000.0);
-        lineSegment.MoveTo(p1)
-                   .TurnTo(p2.A)
-                   .Line(p2.R)
-                   .SetLineColor(Flatland.Colors.Red)
-                   .Turn( Algorithms.ToRadians(150.0) )
-                   .Line(400000.0)
-                   .Turn( Algorithms.ToRadians(120.0) )
-                   .Line(400000.0)
-                   .Turn( Algorithms.ToRadians(120.0) )
-                   .Line(400000.0);
+        endcapPt1.Circle(p1, ENDCAP_RADIUS);
+        DrawArrowHead( DrawLineSegment(lineSegment, p1, p2) );
+    }
+
+    private Turtle DrawLineSegment(Turtle turtle, Cartesian p1, Polar p2)
+    {
+        return turtle.MoveTo(p1).Line(p2);
+    }
+
+    private Turtle DrawArrowHead(Turtle turtle)
+    {
+        return turtle.SetLineColor(Flatland.Colors.Red)
+                     .Turn( Algorithms.ToRadians(150.0) )
+                     .Line(ARROWHEAD_LENGTH)
+                     .Turn( Algorithms.ToRadians(120.0) )
+                     .Line(ARROWHEAD_LENGTH)
+                     .Turn( Algorithms.ToRadians(120.0) )
+                     .Line(ARROWHEAD_LENGTH);
     }
 }
 
